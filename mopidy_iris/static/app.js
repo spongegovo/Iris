@@ -1498,11 +1498,9 @@ module.exports = exports['default'];
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -1648,12 +1646,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -1776,7 +1772,7 @@ exports.getLibraryAlbumsProcessor = getLibraryAlbumsProcessor;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
 var mopidyActions = __webpack_require__(11);
 var lastfmActions = __webpack_require__(33);
@@ -2234,7 +2230,7 @@ function getSearchResults(type, query) {
                 dispatch({
                     type: 'SPOTIFY_SEARCH_RESULTS_LOADED',
                     context: 'tracks',
-                    results: response.tracks.items,
+                    results: helpers.formatTracks(response.tracks.items),
                     more: response.tracks.next
                 });
             }
@@ -3309,7 +3305,7 @@ function getLibraryAlbumsProcessor(data) {
         });
     };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24), __webpack_require__(13)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(13)))
 
 /***/ }),
 /* 11 */
@@ -4332,11 +4328,9 @@ module.exports = function() {
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -4419,517 +4413,6 @@ exports.default = Icon;
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
-
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-var invariant = function(condition, format, a, b, c, d, e, f) {
-  if (process.env.NODE_ENV !== 'production') {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  }
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error(
-        'Minified exception occurred; use the non-minified dev environment ' +
-        'for the full error message and additional helpful warnings.'
-      );
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(
-        format.replace(/%s/g, function() { return args[argIndex++]; })
-      );
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-};
-
-module.exports = invariant;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.getBroadcasts = getBroadcasts;
-exports.startSearch = startSearch;
-exports.handleException = handleException;
-exports.debugResponse = debugResponse;
-exports.startServices = startServices;
-exports.set = set;
-exports.reorderPlaylistTracks = reorderPlaylistTracks;
-exports.savePlaylist = savePlaylist;
-exports.createPlaylist = createPlaylist;
-exports.deletePlaylist = deletePlaylist;
-exports.removeTracksFromPlaylist = removeTracksFromPlaylist;
-exports.addTracksToPlaylist = addTracksToPlaylist;
-exports.getLibraryPlaylists = getLibraryPlaylists;
-exports.getLibraryAlbums = getLibraryAlbums;
-exports.getLibraryArtists = getLibraryArtists;
-exports.loadedMore = loadedMore;
-exports.tracksLoaded = tracksLoaded;
-exports.albumsLoaded = albumsLoaded;
-exports.artistsLoaded = artistsLoaded;
-exports.playlistsLoaded = playlistsLoaded;
-exports.usersLoaded = usersLoaded;
-
-var _helpers = __webpack_require__(2);
-
-var helpers = _interopRequireWildcard(_helpers);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var spotifyActions = __webpack_require__(10);
-var mopidyActions = __webpack_require__(11);
-
-function getBroadcasts() {
-    return function (dispatch, getState) {
-        var config = {
-            method: 'GET',
-            timeout: 15000,
-            url: 'https://gist.githubusercontent.com/jaedb/b677dccf80daf3ccb2ef12e96e495677/raw'
-        };
-        $.ajax(config).then(function (response) {
-            dispatch({
-                type: 'BROADCASTS_LOADED',
-                broadcasts: JSON.parse(response)
-            });
-        }, function (xhr, status, error) {
-            dispatch(handleException('Could not fetch broadcasts from GitHub', {
-                config: config,
-                xhr: xhr,
-                status: status,
-                error: error
-            }));
-        });
-    };
-}
-
-function startSearch(search_type, query) {
-    var only_mopidy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-    return {
-        type: 'SEARCH_STARTED',
-        search_type: search_type,
-        query: query,
-        only_mopidy: only_mopidy
-    };
-}
-
-function handleException(message) {
-    var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-    return {
-        type: 'HANDLE_EXCEPTION',
-        message: message,
-        description: description,
-        data: data
-    };
-}
-
-function debugResponse(response) {
-    return {
-        type: 'DEBUG',
-        response: response
-    };
-}
-
-function startServices() {
-    return {
-        type: 'CORE_START_SERVICES'
-    };
-}
-
-function set(data) {
-    return {
-        type: 'CORE_SET',
-        data: data
-    };
-}
-
-/**
- * Playlist manipulation
- **/
-
-function reorderPlaylistTracks(uri, indexes, insert_before) {
-    var snapshot_id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
-    var range = helpers.createRange(indexes);
-    switch (helpers.uriSource(uri)) {
-
-        case 'spotify':
-            return {
-                type: 'SPOTIFY_REORDER_PLAYLIST_TRACKS',
-                key: uri,
-                range_start: range.start,
-                range_length: range.length,
-                insert_before: insert_before,
-                snapshot_id: snapshot_id
-            };
-
-        case 'm3u':
-            return {
-                type: 'MOPIDY_REORDER_PLAYLIST_TRACKS',
-                key: uri,
-                range_start: range.start,
-                range_length: range.length,
-                insert_before: insert_before
-            };
-    }
-}
-
-function savePlaylist(uri, name) {
-    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-    var is_public = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-    var is_collaborative = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-
-    switch (helpers.uriSource(uri)) {
-
-        case 'spotify':
-            return {
-                type: 'SPOTIFY_SAVE_PLAYLIST',
-                key: uri,
-                name: name,
-                description: description == '' ? null : description,
-                is_public: is_public,
-                is_collaborative: is_collaborative
-            };
-
-        case 'm3u':
-            return {
-                type: 'MOPIDY_SAVE_PLAYLIST',
-                key: uri,
-                name: name
-            };
-    }
-    return false;
-}
-
-function createPlaylist(scheme, name) {
-    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-    var is_public = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-    var is_collaborative = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-
-    switch (scheme) {
-
-        case 'spotify':
-            if (description == '') {
-                description = null;
-            }
-            return spotifyActions.createPlaylist(name, description, is_public, is_collaborative);
-
-        default:
-            return mopidyActions.createPlaylist(name, scheme);
-    }
-    return false;
-}
-
-function deletePlaylist(uri) {
-    switch (helpers.uriSource(uri)) {
-
-        case 'spotify':
-            return spotifyActions.following(uri, 'DELETE');
-
-        default:
-            return mopidyActions.deletePlaylist(uri);
-    }
-    return false;
-}
-
-function removeTracksFromPlaylist(uri, tracks_indexes) {
-    switch (helpers.uriSource(uri)) {
-
-        case 'spotify':
-            return {
-                type: 'SPOTIFY_REMOVE_PLAYLIST_TRACKS',
-                key: uri,
-                tracks_indexes: tracks_indexes
-            };
-
-        case 'm3u':
-            return {
-                type: 'MOPIDY_REMOVE_PLAYLIST_TRACKS',
-                key: uri,
-                tracks_indexes: tracks_indexes
-            };
-    }
-}
-
-function addTracksToPlaylist(uri, tracks_uris) {
-    switch (helpers.uriSource(uri)) {
-
-        case 'spotify':
-            return {
-                type: 'SPOTIFY_ADD_PLAYLIST_TRACKS',
-                key: uri,
-                tracks_uris: tracks_uris
-            };
-
-        case 'm3u':
-            return {
-                type: 'MOPIDY_ADD_PLAYLIST_TRACKS',
-                key: uri,
-                tracks_uris: tracks_uris
-            };
-    }
-}
-
-/**
- * Asset libraries
- **/
-
-function getLibraryPlaylists() {
-    return {
-        type: 'GET_LIBRARY_PLAYLISTS'
-    };
-}
-
-function getLibraryAlbums() {
-    return {
-        type: 'GET_LIBRARY_ALBUMS'
-    };
-}
-
-function getLibraryArtists() {
-    return {
-        type: 'GET_LIBRARY_ARTISTS'
-    };
-}
-
-/**
- * Assets loaded
- **/
-
-function loadedMore(parent_type, parent_key, records_type, records_data) {
-    return {
-        type: 'LOADED_MORE',
-        parent_type: parent_type,
-        parent_key: parent_key,
-        records_type: records_type,
-        records_data: records_data
-    };
-}
-
-function tracksLoaded(tracks) {
-    return {
-        type: 'TRACKS_LOADED',
-        tracks: tracks
-    };
-}
-
-function albumsLoaded(albums) {
-    return {
-        type: 'ALBUMS_LOADED',
-        albums: albums
-    };
-}
-
-function artistsLoaded(artists) {
-    return {
-        type: 'ALBUMS_LOADED',
-        artists: artists
-    };
-}
-
-function playlistsLoaded(playlists) {
-    return {
-        type: 'PLAYLISTS_LOADED',
-        playlists: playlists
-    };
-}
-
-function usersLoaded(users) {
-    return {
-        type: 'USERS_LOADED',
-        users: users
-    };
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.setPort = setPort;
-exports.setUsername = setUsername;
-exports.connect = connect;
-exports.disconnect = disconnect;
-exports.startUpgrade = startUpgrade;
-exports.getConnections = getConnections;
-exports.instruct = instruct;
-exports.deliverBroadcast = deliverBroadcast;
-exports.sendAuthorization = sendAuthorization;
-exports.startRadio = startRadio;
-exports.updateRadio = updateRadio;
-exports.stopRadio = stopRadio;
-exports.debug = debug;
-exports.getQueueMetadata = getQueueMetadata;
-exports.addQueueMetadata = addQueueMetadata;
-
-/**
- * Actions and Action Creators
- **/
-
-function setPort(port) {
-	return {
-		type: 'PUSHER_SET_PORT',
-		port: port
-	};
-}
-
-function setUsername(username) {
-	return {
-		type: 'PUSHER_SET_USERNAME',
-		username: username.replace(/[\W_]+/g, '')
-	};
-}
-
-function connect() {
-	return {
-		type: 'PUSHER_CONNECT'
-	};
-}
-
-function disconnect() {
-	return {
-		type: 'PUSHER_DISCONNECT'
-	};
-}
-
-function startUpgrade() {
-	return {
-		type: 'START_UPGRADE'
-	};
-}
-
-function getConnections() {
-	return {
-		type: 'PUSHER_GET_CONNECTIONS'
-	};
-}
-
-function instruct() {
-	var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	return {
-		type: 'PUSHER_INSTRUCT',
-		data: data
-	};
-}
-
-function deliverBroadcast() {
-	var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	return {
-		type: 'PUSHER_DELIVER_BROADCAST',
-		data: data
-	};
-}
-
-function sendAuthorization(recipient_connectionid, authorization, me) {
-	return {
-		type: 'PUSHER_DELIVER_MESSAGE',
-		data: {
-			connection_id: recipient_connectionid,
-			message: {
-				type: 'spotify_authorization',
-				authorization: authorization,
-				me: me
-			}
-		}
-	};
-}
-
-function startRadio(uris) {
-	return {
-		type: 'PUSHER_START_RADIO',
-		uris: uris
-	};
-}
-
-function updateRadio(uris) {
-	return {
-		type: 'PUSHER_UPDATE_RADIO',
-		uris: uris
-	};
-}
-
-function stopRadio() {
-	return {
-		type: 'PUSHER_STOP_RADIO'
-	};
-}
-
-function debug() {
-	var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	return {
-		type: 'PUSHER_DEBUG',
-		message: message
-	};
-}
-
-function getQueueMetadata() {
-	return {
-		type: 'PUSHER_GET_QUEUE_METADATA'
-	};
-}
-
-function addQueueMetadata() {
-	var tlids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	var from_uri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-	return {
-		type: 'PUSHER_ADD_QUEUE_METADATA',
-		tlids: tlids,
-		from_uri: from_uri
-	};
-}
-
-/***/ }),
-/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -15189,16 +14672,525 @@ return jQuery;
 
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
+ * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var invariant = function(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+        'for the full error message and additional helpful warnings.'
+      );
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(
+        format.replace(/%s/g, function() { return args[argIndex++]; })
+      );
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+};
+
+module.exports = invariant;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getBroadcasts = getBroadcasts;
+exports.startSearch = startSearch;
+exports.handleException = handleException;
+exports.debugResponse = debugResponse;
+exports.startServices = startServices;
+exports.set = set;
+exports.reorderPlaylistTracks = reorderPlaylistTracks;
+exports.savePlaylist = savePlaylist;
+exports.createPlaylist = createPlaylist;
+exports.deletePlaylist = deletePlaylist;
+exports.removeTracksFromPlaylist = removeTracksFromPlaylist;
+exports.addTracksToPlaylist = addTracksToPlaylist;
+exports.getLibraryPlaylists = getLibraryPlaylists;
+exports.getLibraryAlbums = getLibraryAlbums;
+exports.getLibraryArtists = getLibraryArtists;
+exports.loadedMore = loadedMore;
+exports.tracksLoaded = tracksLoaded;
+exports.albumsLoaded = albumsLoaded;
+exports.artistsLoaded = artistsLoaded;
+exports.playlistsLoaded = playlistsLoaded;
+exports.usersLoaded = usersLoaded;
+
+var _helpers = __webpack_require__(2);
+
+var helpers = _interopRequireWildcard(_helpers);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var spotifyActions = __webpack_require__(10);
+var mopidyActions = __webpack_require__(11);
+
+function getBroadcasts() {
+    return function (dispatch, getState) {
+        var config = {
+            method: 'GET',
+            timeout: 15000,
+            url: 'https://gist.githubusercontent.com/jaedb/b677dccf80daf3ccb2ef12e96e495677/raw'
+        };
+        $.ajax(config).then(function (response) {
+            dispatch({
+                type: 'BROADCASTS_LOADED',
+                broadcasts: JSON.parse(response)
+            });
+        }, function (xhr, status, error) {
+            dispatch(handleException('Could not fetch broadcasts from GitHub', {
+                config: config,
+                xhr: xhr,
+                status: status,
+                error: error
+            }));
+        });
+    };
+}
+
+function startSearch(search_type, query) {
+    var only_mopidy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+    return {
+        type: 'SEARCH_STARTED',
+        search_type: search_type,
+        query: query,
+        only_mopidy: only_mopidy
+    };
+}
+
+function handleException(message) {
+    var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    return {
+        type: 'HANDLE_EXCEPTION',
+        message: message,
+        description: description,
+        data: data
+    };
+}
+
+function debugResponse(response) {
+    return {
+        type: 'DEBUG',
+        response: response
+    };
+}
+
+function startServices() {
+    return {
+        type: 'CORE_START_SERVICES'
+    };
+}
+
+function set(data) {
+    return {
+        type: 'CORE_SET',
+        data: data
+    };
+}
+
+/**
+ * Playlist manipulation
+ **/
+
+function reorderPlaylistTracks(uri, indexes, insert_before) {
+    var snapshot_id = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+    var range = helpers.createRange(indexes);
+    switch (helpers.uriSource(uri)) {
+
+        case 'spotify':
+            return {
+                type: 'SPOTIFY_REORDER_PLAYLIST_TRACKS',
+                key: uri,
+                range_start: range.start,
+                range_length: range.length,
+                insert_before: insert_before,
+                snapshot_id: snapshot_id
+            };
+
+        case 'm3u':
+            return {
+                type: 'MOPIDY_REORDER_PLAYLIST_TRACKS',
+                key: uri,
+                range_start: range.start,
+                range_length: range.length,
+                insert_before: insert_before
+            };
+    }
+}
+
+function savePlaylist(uri, name) {
+    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+    var is_public = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var is_collaborative = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+    switch (helpers.uriSource(uri)) {
+
+        case 'spotify':
+            return {
+                type: 'SPOTIFY_SAVE_PLAYLIST',
+                key: uri,
+                name: name,
+                description: description == '' ? null : description,
+                is_public: is_public,
+                is_collaborative: is_collaborative
+            };
+
+        case 'm3u':
+            return {
+                type: 'MOPIDY_SAVE_PLAYLIST',
+                key: uri,
+                name: name
+            };
+    }
+    return false;
+}
+
+function createPlaylist(scheme, name) {
+    var description = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+    var is_public = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var is_collaborative = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+    switch (scheme) {
+
+        case 'spotify':
+            if (description == '') {
+                description = null;
+            }
+            return spotifyActions.createPlaylist(name, description, is_public, is_collaborative);
+
+        default:
+            return mopidyActions.createPlaylist(name, scheme);
+    }
+    return false;
+}
+
+function deletePlaylist(uri) {
+    switch (helpers.uriSource(uri)) {
+
+        case 'spotify':
+            return spotifyActions.following(uri, 'DELETE');
+
+        default:
+            return mopidyActions.deletePlaylist(uri);
+    }
+    return false;
+}
+
+function removeTracksFromPlaylist(uri, tracks_indexes) {
+    switch (helpers.uriSource(uri)) {
+
+        case 'spotify':
+            return {
+                type: 'SPOTIFY_REMOVE_PLAYLIST_TRACKS',
+                key: uri,
+                tracks_indexes: tracks_indexes
+            };
+
+        case 'm3u':
+            return {
+                type: 'MOPIDY_REMOVE_PLAYLIST_TRACKS',
+                key: uri,
+                tracks_indexes: tracks_indexes
+            };
+    }
+}
+
+function addTracksToPlaylist(uri, tracks_uris) {
+    switch (helpers.uriSource(uri)) {
+
+        case 'spotify':
+            return {
+                type: 'SPOTIFY_ADD_PLAYLIST_TRACKS',
+                key: uri,
+                tracks_uris: tracks_uris
+            };
+
+        case 'm3u':
+            return {
+                type: 'MOPIDY_ADD_PLAYLIST_TRACKS',
+                key: uri,
+                tracks_uris: tracks_uris
+            };
+    }
+}
+
+/**
+ * Asset libraries
+ **/
+
+function getLibraryPlaylists() {
+    return {
+        type: 'GET_LIBRARY_PLAYLISTS'
+    };
+}
+
+function getLibraryAlbums() {
+    return {
+        type: 'GET_LIBRARY_ALBUMS'
+    };
+}
+
+function getLibraryArtists() {
+    return {
+        type: 'GET_LIBRARY_ARTISTS'
+    };
+}
+
+/**
+ * Assets loaded
+ **/
+
+function loadedMore(parent_type, parent_key, records_type, records_data) {
+    return {
+        type: 'LOADED_MORE',
+        parent_type: parent_type,
+        parent_key: parent_key,
+        records_type: records_type,
+        records_data: records_data
+    };
+}
+
+function tracksLoaded(tracks) {
+    return {
+        type: 'TRACKS_LOADED',
+        tracks: tracks
+    };
+}
+
+function albumsLoaded(albums) {
+    return {
+        type: 'ALBUMS_LOADED',
+        albums: albums
+    };
+}
+
+function artistsLoaded(artists) {
+    return {
+        type: 'ALBUMS_LOADED',
+        artists: artists
+    };
+}
+
+function playlistsLoaded(playlists) {
+    return {
+        type: 'PLAYLISTS_LOADED',
+        playlists: playlists
+    };
+}
+
+function usersLoaded(users) {
+    return {
+        type: 'USERS_LOADED',
+        users: users
+    };
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.setPort = setPort;
+exports.setUsername = setUsername;
+exports.connect = connect;
+exports.disconnect = disconnect;
+exports.startUpgrade = startUpgrade;
+exports.getConnections = getConnections;
+exports.instruct = instruct;
+exports.deliverBroadcast = deliverBroadcast;
+exports.sendAuthorization = sendAuthorization;
+exports.startRadio = startRadio;
+exports.updateRadio = updateRadio;
+exports.stopRadio = stopRadio;
+exports.debug = debug;
+exports.getQueueMetadata = getQueueMetadata;
+exports.addQueueMetadata = addQueueMetadata;
+
+/**
+ * Actions and Action Creators
+ **/
+
+function setPort(port) {
+	return {
+		type: 'PUSHER_SET_PORT',
+		port: port
+	};
+}
+
+function setUsername(username) {
+	return {
+		type: 'PUSHER_SET_USERNAME',
+		username: username.replace(/[\W_]+/g, '')
+	};
+}
+
+function connect() {
+	return {
+		type: 'PUSHER_CONNECT'
+	};
+}
+
+function disconnect() {
+	return {
+		type: 'PUSHER_DISCONNECT'
+	};
+}
+
+function startUpgrade() {
+	return {
+		type: 'START_UPGRADE'
+	};
+}
+
+function getConnections() {
+	return {
+		type: 'PUSHER_GET_CONNECTIONS'
+	};
+}
+
+function instruct() {
+	var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	return {
+		type: 'PUSHER_INSTRUCT',
+		data: data
+	};
+}
+
+function deliverBroadcast() {
+	var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	return {
+		type: 'PUSHER_DELIVER_BROADCAST',
+		data: data
+	};
+}
+
+function sendAuthorization(recipient_connectionid, authorization, me) {
+	return {
+		type: 'PUSHER_DELIVER_MESSAGE',
+		data: {
+			connection_id: recipient_connectionid,
+			message: {
+				type: 'spotify_authorization',
+				authorization: authorization,
+				me: me
+			}
+		}
+	};
+}
+
+function startRadio(uris) {
+	return {
+		type: 'PUSHER_START_RADIO',
+		uris: uris
+	};
+}
+
+function updateRadio(uris) {
+	return {
+		type: 'PUSHER_UPDATE_RADIO',
+		uris: uris
+	};
+}
+
+function stopRadio() {
+	return {
+		type: 'PUSHER_STOP_RADIO'
+	};
+}
+
+function debug() {
+	var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	return {
+		type: 'PUSHER_DEBUG',
+		message: message
+	};
+}
+
+function getQueueMetadata() {
+	return {
+		type: 'PUSHER_GET_QUEUE_METADATA'
+	};
+}
+
+function addQueueMetadata() {
+	var tlids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	var from_uri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+	return {
+		type: 'PUSHER_ADD_QUEUE_METADATA',
+		tlids: tlids,
+		from_uri: from_uri
+	};
+}
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 if (process.env.NODE_ENV !== 'production') {
@@ -15617,11 +15609,9 @@ module.exports = ReactComponentTreeHook;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -15816,6 +15806,10 @@ var _reactFontawesome = __webpack_require__(6);
 
 var _reactFontawesome2 = _interopRequireDefault(_reactFontawesome);
 
+var _sortablejs = __webpack_require__(393);
+
+var _sortablejs2 = _interopRequireDefault(_sortablejs);
+
 var _Track = __webpack_require__(164);
 
 var _Track2 = _interopRequireDefault(_Track);
@@ -15855,27 +15849,18 @@ var TrackList = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (TrackList.__proto__ || Object.getPrototypeOf(TrackList)).call(this, props));
 
 		_this.touch_dragging_tracks_keys = false;
-
-		_this.handleKeyDown = _this.handleKeyDown.bind(_this);
-		_this.handleTouchMove = _this.handleTouchMove.bind(_this);
-		_this.handleTouchEnd = _this.handleTouchEnd.bind(_this);
 		return _this;
 	}
 
 	_createClass(TrackList, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {
-			window.addEventListener("keydown", this.handleKeyDown, false);
-			window.addEventListener("touchmove", this.handleTouchMove, false);
-			window.addEventListener("touchend", this.handleTouchEnd, false);
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var element = document.getElementById('tracklist');
+			this._sortable = _sortablejs2.default.create(element);
 		}
 	}, {
 		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
-			window.removeEventListener("keydown", this.handleKeyDown, false);
-			window.removeEventListener("touchmove", this.handleTouchMove, false);
-			window.removeEventListener("touchend", this.handleTouchEnd, false);
-		}
+		value: function componentWillUnmount() {}
 	}, {
 		key: 'handleKeyDown',
 		value: function handleKeyDown(e) {
@@ -16328,7 +16313,7 @@ var TrackList = function (_React$Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: className },
+				{ className: className, id: 'tracklist' },
 				this.renderHeader(),
 				this.props.tracks.map(function (track, index) {
 					var track_key = _this2.buildTrackKey(track, index);
@@ -16393,7 +16378,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TrackList);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 31 */
@@ -16481,17 +16466,8 @@ exports.default = LazyLoadListener;
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory(__webpack_require__(1), __webpack_require__(25), __webpack_require__(14));
-	else if(typeof define === 'function' && define.amd)
-		define(["react", "prop-types", "object-assign"], factory);
-	else {
-		var a = typeof exports === 'object' ? factory(require("react"), require("prop-types"), require("object-assign")) : factory(root["react"], root["prop-types"], root["object-assign"]);
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_10__, __WEBPACK_EXTERNAL_MODULE_11__, __WEBPACK_EXTERNAL_MODULE_12__) {
-return /******/ (function(modules) { // webpackBootstrap
+module.exports =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -16719,12 +16695,7 @@ function initialize(configs, options) {
     return false;
   }
 
-  (0, _loadGA2.default)();
-  internalGa = function internalGa() {
-    var _window;
-
-    return (_window = window).ga.apply(_window, arguments);
-  };
+  internalGa = (0, _loadGA2.default)();
 
   if (Array.isArray(configs)) {
     configs.forEach(function (config) {
@@ -16757,7 +16728,7 @@ function ga() {
     }
   }
 
-  return window.ga;
+  return internalGa;
 }
 
 /**
@@ -17347,6 +17318,8 @@ exports.default = function () {
     m.parentNode.insertBefore(a, m);
   })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
   /* eslint-enable */
+
+  return window.ga;
 };
 
 /***/ }),
@@ -17481,23 +17454,22 @@ exports.default = OutboundLink;
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
+module.exports = __webpack_require__(1);
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_11__;
+module.exports = __webpack_require__(25);
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
+module.exports = __webpack_require__(14);
 
 /***/ })
 /******/ ]);
-});
 
 /***/ }),
 /* 33 */
@@ -17520,7 +17492,7 @@ exports.loveTrack = loveTrack;
 exports.unloveTrack = unloveTrack;
 exports.scrobble = scrobble;
 
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
 var helpers = __webpack_require__(2);
 
@@ -17847,7 +17819,7 @@ function scrobble(track) {
         });
     };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 34 */
@@ -19318,7 +19290,7 @@ var Parallax = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Parallax;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 45 */
@@ -20465,7 +20437,7 @@ function _resetWarned() {
 /* harmony export (immutable) */ __webpack_exports__["b"] = getParamNames;
 /* unused harmony export getParams */
 /* harmony export (immutable) */ __webpack_exports__["a"] = formatPattern;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_invariant__);
 
 
@@ -20714,7 +20686,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _invariant = __webpack_require__(21);
+var _invariant = __webpack_require__(22);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -21901,11 +21873,9 @@ module.exports = canDefineProperty;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -23421,7 +23391,7 @@ var DropdownField = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = DropdownField;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 76 */
@@ -23722,12 +23692,10 @@ module.exports = lowPriorityWarning;
 
 "use strict";
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 
@@ -24691,11 +24659,9 @@ module.exports = ReactComponentEnvironment;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  * 
@@ -25726,7 +25692,7 @@ function mapAsync(array, work, callback) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(21);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
@@ -27238,12 +27204,10 @@ module.exports = ReactElementValidator;
 
 "use strict";
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 
@@ -27266,12 +27230,10 @@ module.exports = function(isValidElement) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 
@@ -27279,6 +27241,7 @@ module.exports = function(isValidElement) {
 var emptyFunction = __webpack_require__(27);
 var invariant = __webpack_require__(7);
 var warning = __webpack_require__(9);
+var assign = __webpack_require__(14);
 
 var ReactPropTypesSecret = __webpack_require__(78);
 var checkPropTypes = __webpack_require__(179);
@@ -27377,7 +27340,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     objectOf: createObjectOfTypeChecker,
     oneOf: createEnumTypeChecker,
     oneOfType: createUnionTypeChecker,
-    shape: createShapeTypeChecker
+    shape: createShapeTypeChecker,
+    exact: createStrictShapeTypeChecker,
   };
 
   /**
@@ -27592,7 +27556,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       if (typeof checker !== 'function') {
         warning(
           false,
-          'Invalid argument supplid to oneOfType. Expected an array of check functions, but ' +
+          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
           'received %s at index %s.',
           getPostfixForTypeWarning(checker),
           i
@@ -27643,6 +27607,36 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       }
       return null;
     }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createStrictShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      // We need to check all keys in case some are required but missing from
+      // props.
+      var allKeys = assign({}, props[propName], shapeTypes);
+      for (var key in allKeys) {
+        var checker = shapeTypes[key];
+        if (!checker) {
+          return new PropTypeError(
+            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+          );
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+
     return createChainableTypeChecker(validate);
   }
 
@@ -29229,11 +29223,9 @@ module.exports = setTextContent;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -30346,11 +30338,9 @@ module.exports = traverseAllChildren;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -30555,11 +30545,9 @@ module.exports = ReactInputSelection;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -31197,7 +31185,7 @@ var storeShape = __WEBPACK_IMPORTED_MODULE_0_prop_types___default.a.shape({
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = connectAdvanced;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics__ = __webpack_require__(270);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hoist_non_react_statics__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
@@ -32252,7 +32240,7 @@ function assignRouterState(router, _ref) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_create_react_class___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_create_react_class__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__PropTypes__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ContextUtils__ = __webpack_require__(100);
@@ -32396,7 +32384,7 @@ var Link = __WEBPACK_IMPORTED_MODULE_1_create_react_class___default()({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_create_react_class___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_create_react_class__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__RouteUtils__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__PatternUtils__ = __webpack_require__(53);
@@ -33348,7 +33336,7 @@ var Track = function (_React$Component) {
 				track_columns.push(_react2.default.createElement(
 					'span',
 					{ className: 'col duration', key: 'duration' },
-					track.duration ? _react2.default.createElement(_Dater2.default, { type: 'length', data: track.duration }) : null
+					track.duration ? _react2.default.createElement(_Dater2.default, { type: 'length', data: track.duration }) : '-'
 				));
 			}
 
@@ -33399,28 +33387,15 @@ var Track = function (_React$Component) {
 			} else {
 				return _react2.default.createElement(
 					'div',
-					{
-						className: className,
-						onMouseEnter: function onMouseEnter(e) {
-							return _this2.setState({ hover: true });
-						},
-						onMouseLeave: function onMouseLeave(e) {
-							return _this2.setState({ hover: false });
-						} },
+					{ className: className },
 					track_actions,
 					_react2.default.createElement(
 						'div',
 						{ className: 'liner'
 							//onTouchEnd={e => this.handleTouchEnd(e)}			// When touch dragging is dropped on me
-							, onMouseDown: function onMouseDown(e) {
-								return _this2.handleMouseDown(e);
-							} // Click (or potentially a mouse drag start)
-							, onMouseMove: function onMouseMove(e) {
-								return _this2.handleMouseMove(e);
-							} // Any movement over me
-							, onMouseUp: function onMouseUp(e) {
-								return _this2.handleMouseUp(e);
-							} // End of click, or potentially a dragging drop event
+							//onMouseDown={e => this.handleMouseDown(e)}			// Click (or potentially a mouse drag start)
+							//onMouseMove={e => this.handleMouseMove(e)}			// Any movement over me
+							//onMouseUp={e => this.handleMouseUp(e)}				// End of click, or potentially a dragging drop event
 							, onDoubleClick: function onDoubleClick(e) {
 								return _this2.props.handleDoubleClick(e);
 							},
@@ -33438,7 +33413,7 @@ var Track = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Track;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 165 */
@@ -33652,7 +33627,7 @@ var _reactFontawesome = __webpack_require__(6);
 
 var _reactFontawesome2 = _interopRequireDefault(_reactFontawesome);
 
-var _actions = __webpack_require__(23);
+var _actions = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions);
 
@@ -33879,7 +33854,7 @@ var _reactFontawesome = __webpack_require__(6);
 
 var _reactFontawesome2 = _interopRequireDefault(_reactFontawesome);
 
-var _actions = __webpack_require__(23);
+var _actions = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions);
 
@@ -34006,89 +33981,89 @@ var _App = __webpack_require__(354);
 
 var _App2 = _interopRequireDefault(_App);
 
-var _Album = __webpack_require__(408);
+var _Album = __webpack_require__(409);
 
 var _Album2 = _interopRequireDefault(_Album);
 
-var _Artist = __webpack_require__(409);
+var _Artist = __webpack_require__(410);
 
 var _Artist2 = _interopRequireDefault(_Artist);
 
-var _Playlist = __webpack_require__(411);
+var _Playlist = __webpack_require__(412);
 
 var _Playlist2 = _interopRequireDefault(_Playlist);
 
-var _User = __webpack_require__(412);
+var _User = __webpack_require__(413);
 
 var _User2 = _interopRequireDefault(_User);
 
-var _Track = __webpack_require__(413);
+var _Track = __webpack_require__(414);
 
 var _Track2 = _interopRequireDefault(_Track);
 
-var _Queue = __webpack_require__(416);
+var _Queue = __webpack_require__(417);
 
 var _Queue2 = _interopRequireDefault(_Queue);
 
-var _QueueHistory = __webpack_require__(417);
+var _QueueHistory = __webpack_require__(418);
 
 var _QueueHistory2 = _interopRequireDefault(_QueueHistory);
 
-var _Settings = __webpack_require__(418);
+var _Settings = __webpack_require__(419);
 
 var _Settings2 = _interopRequireDefault(_Settings);
 
-var _Debug = __webpack_require__(420);
+var _Debug = __webpack_require__(421);
 
 var _Debug2 = _interopRequireDefault(_Debug);
 
-var _Search = __webpack_require__(421);
+var _Search = __webpack_require__(422);
 
 var _Search2 = _interopRequireDefault(_Search);
 
-var _DiscoverRecommendations = __webpack_require__(423);
+var _DiscoverRecommendations = __webpack_require__(424);
 
 var _DiscoverRecommendations2 = _interopRequireDefault(_DiscoverRecommendations);
 
-var _DiscoverFeatured = __webpack_require__(425);
+var _DiscoverFeatured = __webpack_require__(426);
 
 var _DiscoverFeatured2 = _interopRequireDefault(_DiscoverFeatured);
 
-var _DiscoverCategories = __webpack_require__(426);
+var _DiscoverCategories = __webpack_require__(427);
 
 var _DiscoverCategories2 = _interopRequireDefault(_DiscoverCategories);
 
-var _DiscoverCategory = __webpack_require__(428);
+var _DiscoverCategory = __webpack_require__(429);
 
 var _DiscoverCategory2 = _interopRequireDefault(_DiscoverCategory);
 
-var _DiscoverNewReleases = __webpack_require__(429);
+var _DiscoverNewReleases = __webpack_require__(430);
 
 var _DiscoverNewReleases2 = _interopRequireDefault(_DiscoverNewReleases);
 
-var _LibraryArtists = __webpack_require__(430);
+var _LibraryArtists = __webpack_require__(431);
 
 var _LibraryArtists2 = _interopRequireDefault(_LibraryArtists);
 
-var _LibraryAlbums = __webpack_require__(431);
+var _LibraryAlbums = __webpack_require__(432);
 
 var _LibraryAlbums2 = _interopRequireDefault(_LibraryAlbums);
 
-var _LibraryTracks = __webpack_require__(432);
+var _LibraryTracks = __webpack_require__(433);
 
 var _LibraryTracks2 = _interopRequireDefault(_LibraryTracks);
 
-var _LibraryPlaylists = __webpack_require__(433);
+var _LibraryPlaylists = __webpack_require__(434);
 
 var _LibraryPlaylists2 = _interopRequireDefault(_LibraryPlaylists);
 
-var _LibraryBrowse = __webpack_require__(434);
+var _LibraryBrowse = __webpack_require__(435);
 
 var _LibraryBrowse2 = _interopRequireDefault(_LibraryBrowse);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-__webpack_require__(435); /**
+__webpack_require__(436); /**
                               * Base-level application wrapper
                               **/
 
@@ -34145,7 +34120,7 @@ _reactDom2.default.render(_react2.default.createElement(
 		)
 	)
 ), document.getElementById('app'));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24), __webpack_require__(13)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(13)))
 
 /***/ }),
 /* 170 */
@@ -35040,12 +35015,10 @@ module.exports = factory(isValidElement);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 
@@ -35079,7 +35052,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         try {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
-          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
+          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
           error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
         } catch (ex) {
           error = ex;
@@ -36989,11 +36962,9 @@ module.exports = ReactHostOperationHistoryHook;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -37026,11 +36997,9 @@ module.exports = performanceNow;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -37507,11 +37476,9 @@ module.exports = Danger;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -37597,11 +37564,9 @@ module.exports = createNodesFromMarkup;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -37730,11 +37695,9 @@ module.exports = createArrayFromMixed;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -39129,11 +39092,9 @@ module.exports = CSSPropertyOperations;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -39176,11 +39137,9 @@ module.exports = camelizeStyleName;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -39294,11 +39253,9 @@ module.exports = dangerousStyleValue;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -39340,11 +39297,9 @@ module.exports = hyphenateStyleName;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -39376,11 +39331,9 @@ module.exports = hyphenate;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  * @typechecks static-only
@@ -42797,11 +42750,9 @@ module.exports = ReactEventListener;
 "use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -43354,11 +43305,9 @@ module.exports = getNodeForCharacterOffset;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -43399,11 +43348,9 @@ module.exports = containsNode;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -43429,11 +43376,9 @@ module.exports = isTextNode;
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @typechecks
  */
@@ -45294,12 +45239,10 @@ function createProvider() {
 
 "use strict";
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 
@@ -45344,7 +45287,8 @@ module.exports = function() {
     objectOf: getShim,
     oneOf: getShim,
     oneOfType: getShim,
-    shape: getShim
+    shape: getShim,
+    exact: getShim
   };
 
   ReactPropTypes.checkPropTypes = emptyFunction;
@@ -46504,7 +46448,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(21);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
@@ -47421,7 +47365,7 @@ var IndexLink = __WEBPACK_IMPORTED_MODULE_1_create_react_class___default()({
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = withRouter;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
@@ -47558,7 +47502,7 @@ module.exports = function hoistNonReactStatics(targetComponent, sourceComponent,
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__routerWarning__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Redirect__ = __webpack_require__(154);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__InternalPropTypes__ = __webpack_require__(60);
@@ -47614,7 +47558,7 @@ var IndexRedirect = __WEBPACK_IMPORTED_MODULE_0_create_react_class___default()({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__routerWarning__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__RouteUtils__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__InternalPropTypes__ = __webpack_require__(60);
@@ -47670,7 +47614,7 @@ var IndexRoute = __WEBPACK_IMPORTED_MODULE_0_create_react_class___default()({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_create_react_class___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_create_react_class__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__RouteUtils__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__InternalPropTypes__ = __webpack_require__(60);
@@ -47722,7 +47666,7 @@ var Route = __WEBPACK_IMPORTED_MODULE_0_create_react_class___default()({
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_lib_Actions__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_history_lib_Actions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_history_lib_Actions__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createMemoryHistory__ = __webpack_require__(155);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createTransitionManager__ = __webpack_require__(150);
@@ -48025,7 +47969,7 @@ var _warning = __webpack_require__(41);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _invariant = __webpack_require__(21);
+var _invariant = __webpack_require__(22);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -48294,7 +48238,7 @@ exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _invariant = __webpack_require__(21);
+var _invariant = __webpack_require__(22);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -48453,7 +48397,7 @@ var _warning = __webpack_require__(41);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _invariant = __webpack_require__(21);
+var _invariant = __webpack_require__(22);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
@@ -50044,9 +49988,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
-var pusherActions = __webpack_require__(23);
+var pusherActions = __webpack_require__(24);
 var mopidyActions = __webpack_require__(11);
 var spotifyActions = __webpack_require__(10);
 var lastfmActions = __webpack_require__(33);
@@ -50850,7 +50794,7 @@ var UIMiddleware = function () {
 }();
 
 exports.default = UIMiddleware;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
 /* 330 */
@@ -50870,9 +50814,9 @@ var _reactGa2 = _interopRequireDefault(_reactGa);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var helpers = __webpack_require__(2);
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
-var pusherActions = __webpack_require__(23);
+var pusherActions = __webpack_require__(24);
 var lastfmActions = __webpack_require__(33);
 var spotifyActions = __webpack_require__(10);
 
@@ -51293,10 +51237,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var mopidyActions = __webpack_require__(11);
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
 var spotifyActions = __webpack_require__(10);
-var pusherActions = __webpack_require__(23);
+var pusherActions = __webpack_require__(24);
 var lastfmActions = __webpack_require__(33);
 
 var MopidyMiddleware = function () {
@@ -52018,7 +51962,7 @@ var MopidyMiddleware = function () {
                                         store.dispatch({
                                             type: 'MOPIDY_SEARCH_RESULTS_LOADED',
                                             context: action.data.context,
-                                            results: tracks
+                                            results: helpers.formatTracks(tracks)
                                         });
                                     }
                                     continue_process();
@@ -52042,7 +51986,7 @@ var MopidyMiddleware = function () {
                                         store.dispatch({
                                             type: 'MOPIDY_SEARCH_RESULTS_LOADED',
                                             context: 'tracks',
-                                            results: tracks
+                                            results: helpers.formatTracks(tracks)
                                         });
                                     }
 
@@ -55661,7 +55605,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var helpers = __webpack_require__(2);
 var lastfmActions = __webpack_require__(33);
 var uiActions = __webpack_require__(5);
-var pusherActions = __webpack_require__(23);
+var pusherActions = __webpack_require__(24);
 
 var LastfmMiddleware = function () {
 
@@ -55717,7 +55661,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var helpers = __webpack_require__(2);
 var spotifyActions = __webpack_require__(10);
 var uiActions = __webpack_require__(5);
-var pusherActions = __webpack_require__(23);
+var pusherActions = __webpack_require__(24);
 
 var SpotifyMiddleware = function () {
 
@@ -56046,7 +55990,7 @@ var SpotifyMiddleware = function () {
                         store.dispatch({
                             type: 'SPOTIFY_SEARCH_RESULTS_LOADED',
                             context: 'tracks',
-                            results: action.data.tracks.items,
+                            results: helpers.formatTracks(action.data.tracks.items),
                             more: action.data.tracks.next
                         });
                         break;
@@ -56346,19 +56290,19 @@ var _ContextMenu = __webpack_require__(392);
 
 var _ContextMenu2 = _interopRequireDefault(_ContextMenu);
 
-var _Dragger = __webpack_require__(393);
+var _Dragger = __webpack_require__(394);
 
 var _Dragger2 = _interopRequireDefault(_Dragger);
 
-var _Modal = __webpack_require__(394);
+var _Modal = __webpack_require__(395);
 
 var _Modal2 = _interopRequireDefault(_Modal);
 
-var _Notifications = __webpack_require__(406);
+var _Notifications = __webpack_require__(407);
 
 var _Notifications2 = _interopRequireDefault(_Notifications);
 
-var _DebugInfo = __webpack_require__(407);
+var _DebugInfo = __webpack_require__(408);
 
 var _DebugInfo2 = _interopRequireDefault(_DebugInfo);
 
@@ -56366,7 +56310,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -56374,7 +56318,7 @@ var _actions2 = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions2);
 
-var _actions3 = __webpack_require__(23);
+var _actions3 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions3);
 
@@ -58124,7 +58068,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -58132,7 +58076,7 @@ var _actions2 = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions2);
 
-var _actions3 = __webpack_require__(23);
+var _actions3 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions3);
 
@@ -59192,10 +59136,1561 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ContextMenu);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24), __webpack_require__(13)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(13)))
 
 /***/ }),
 /* 393 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**!
+ * Sortable
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @license MIT
+ */
+
+(function sortableModule(factory) {
+	"use strict";
+
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else if (typeof module != "undefined" && typeof module.exports != "undefined") {
+		module.exports = factory();
+	}
+	else {
+		/* jshint sub:true */
+		window["Sortable"] = factory();
+	}
+})(function sortableFactory() {
+	"use strict";
+
+	if (typeof window === "undefined" || !window.document) {
+		return function sortableError() {
+			throw new Error("Sortable.js requires a window with a document");
+		};
+	}
+
+	var dragEl,
+		parentEl,
+		ghostEl,
+		cloneEl,
+		rootEl,
+		nextEl,
+		lastDownEl,
+
+		scrollEl,
+		scrollParentEl,
+		scrollCustomFn,
+
+		lastEl,
+		lastCSS,
+		lastParentCSS,
+
+		oldIndex,
+		newIndex,
+
+		activeGroup,
+		putSortable,
+
+		autoScroll = {},
+
+		tapEvt,
+		touchEvt,
+
+		moved,
+
+		/** @const */
+		R_SPACE = /\s+/g,
+		R_FLOAT = /left|right|inline/,
+
+		expando = 'Sortable' + (new Date).getTime(),
+
+		win = window,
+		document = win.document,
+		parseInt = win.parseInt,
+		setTimeout = win.setTimeout,
+
+		$ = __webpack_provided_window_dot_jQuery || win.Zepto,
+		Polymer = win.Polymer,
+
+		captureMode = false,
+		passiveMode = false,
+
+		supportDraggable = ('draggable' in document.createElement('div')),
+		supportCssPointerEvents = (function (el) {
+			// false when IE11
+			if (!!navigator.userAgent.match(/(?:Trident.*rv[ :]?11\.|msie)/i)) {
+				return false;
+			}
+			el = document.createElement('x');
+			el.style.cssText = 'pointer-events:auto';
+			return el.style.pointerEvents === 'auto';
+		})(),
+
+		_silent = false,
+
+		abs = Math.abs,
+		min = Math.min,
+
+		savedInputChecked = [],
+		touchDragOverListeners = [],
+
+		_autoScroll = _throttle(function (/**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
+			// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
+			if (rootEl && options.scroll) {
+				var _this = rootEl[expando],
+					el,
+					rect,
+					sens = options.scrollSensitivity,
+					speed = options.scrollSpeed,
+
+					x = evt.clientX,
+					y = evt.clientY,
+
+					winWidth = window.innerWidth,
+					winHeight = window.innerHeight,
+
+					vx,
+					vy,
+
+					scrollOffsetX,
+					scrollOffsetY
+				;
+
+				// Delect scrollEl
+				if (scrollParentEl !== rootEl) {
+					scrollEl = options.scroll;
+					scrollParentEl = rootEl;
+					scrollCustomFn = options.scrollFn;
+
+					if (scrollEl === true) {
+						scrollEl = rootEl;
+
+						do {
+							if ((scrollEl.offsetWidth < scrollEl.scrollWidth) ||
+								(scrollEl.offsetHeight < scrollEl.scrollHeight)
+							) {
+								break;
+							}
+							/* jshint boss:true */
+						} while (scrollEl = scrollEl.parentNode);
+					}
+				}
+
+				if (scrollEl) {
+					el = scrollEl;
+					rect = scrollEl.getBoundingClientRect();
+					vx = (abs(rect.right - x) <= sens) - (abs(rect.left - x) <= sens);
+					vy = (abs(rect.bottom - y) <= sens) - (abs(rect.top - y) <= sens);
+				}
+
+
+				if (!(vx || vy)) {
+					vx = (winWidth - x <= sens) - (x <= sens);
+					vy = (winHeight - y <= sens) - (y <= sens);
+
+					/* jshint expr:true */
+					(vx || vy) && (el = win);
+				}
+
+
+				if (autoScroll.vx !== vx || autoScroll.vy !== vy || autoScroll.el !== el) {
+					autoScroll.el = el;
+					autoScroll.vx = vx;
+					autoScroll.vy = vy;
+
+					clearInterval(autoScroll.pid);
+
+					if (el) {
+						autoScroll.pid = setInterval(function () {
+							scrollOffsetY = vy ? vy * speed : 0;
+							scrollOffsetX = vx ? vx * speed : 0;
+
+							if ('function' === typeof(scrollCustomFn)) {
+								return scrollCustomFn.call(_this, scrollOffsetX, scrollOffsetY, evt);
+							}
+
+							if (el === win) {
+								win.scrollTo(win.pageXOffset + scrollOffsetX, win.pageYOffset + scrollOffsetY);
+							} else {
+								el.scrollTop += scrollOffsetY;
+								el.scrollLeft += scrollOffsetX;
+							}
+						}, 24);
+					}
+				}
+			}
+		}, 30),
+
+		_prepareGroup = function (options) {
+			function toFn(value, pull) {
+				if (value === void 0 || value === true) {
+					value = group.name;
+				}
+
+				if (typeof value === 'function') {
+					return value;
+				} else {
+					return function (to, from) {
+						var fromGroup = from.options.group.name;
+
+						return pull
+							? value
+							: value && (value.join
+								? value.indexOf(fromGroup) > -1
+								: (fromGroup == value)
+							);
+					};
+				}
+			}
+
+			var group = {};
+			var originalGroup = options.group;
+
+			if (!originalGroup || typeof originalGroup != 'object') {
+				originalGroup = {name: originalGroup};
+			}
+
+			group.name = originalGroup.name;
+			group.checkPull = toFn(originalGroup.pull, true);
+			group.checkPut = toFn(originalGroup.put);
+			group.revertClone = originalGroup.revertClone;
+
+			options.group = group;
+		}
+	;
+
+	// Detect support a passive mode
+	try {
+		window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
+			get: function () {
+				// `false`, because everything starts to work incorrectly and instead of d'n'd,
+				// begins the page has scrolled.
+				passiveMode = false;
+				captureMode = {
+					capture: false,
+					passive: passiveMode
+				};
+			}
+		}));
+	} catch (err) {}
+
+	/**
+	 * @class  Sortable
+	 * @param  {HTMLElement}  el
+	 * @param  {Object}       [options]
+	 */
+	function Sortable(el, options) {
+		if (!(el && el.nodeType && el.nodeType === 1)) {
+			throw 'Sortable: `el` must be HTMLElement, and not ' + {}.toString.call(el);
+		}
+
+		this.el = el; // root element
+		this.options = options = _extend({}, options);
+
+
+		// Export instance
+		el[expando] = this;
+
+		// Default options
+		var defaults = {
+			group: Math.random(),
+			sort: true,
+			disabled: false,
+			store: null,
+			handle: null,
+			scroll: true,
+			scrollSensitivity: 30,
+			scrollSpeed: 10,
+			draggable: /[uo]l/i.test(el.nodeName) ? 'li' : '>*',
+			ghostClass: 'sortable-ghost',
+			chosenClass: 'sortable-chosen',
+			dragClass: 'sortable-drag',
+			ignore: 'a, img',
+			filter: null,
+			preventOnFilter: true,
+			animation: 0,
+			setData: function (dataTransfer, dragEl) {
+				dataTransfer.setData('Text', dragEl.textContent);
+			},
+			dropBubble: false,
+			dragoverBubble: false,
+			dataIdAttr: 'data-id',
+			delay: 0,
+			forceFallback: false,
+			fallbackClass: 'sortable-fallback',
+			fallbackOnBody: false,
+			fallbackTolerance: 0,
+			fallbackOffset: {x: 0, y: 0},
+			supportPointer: Sortable.supportPointer !== false
+		};
+
+
+		// Set default options
+		for (var name in defaults) {
+			!(name in options) && (options[name] = defaults[name]);
+		}
+
+		_prepareGroup(options);
+
+		// Bind all private methods
+		for (var fn in this) {
+			if (fn.charAt(0) === '_' && typeof this[fn] === 'function') {
+				this[fn] = this[fn].bind(this);
+			}
+		}
+
+		// Setup drag mode
+		this.nativeDraggable = options.forceFallback ? false : supportDraggable;
+
+		// Bind events
+		_on(el, 'mousedown', this._onTapStart);
+		_on(el, 'touchstart', this._onTapStart);
+		options.supportPointer && _on(el, 'pointerdown', this._onTapStart);
+
+		if (this.nativeDraggable) {
+			_on(el, 'dragover', this);
+			_on(el, 'dragenter', this);
+		}
+
+		touchDragOverListeners.push(this._onDragOver);
+
+		// Restore sorting
+		options.store && this.sort(options.store.get(this));
+	}
+
+
+	Sortable.prototype = /** @lends Sortable.prototype */ {
+		constructor: Sortable,
+
+		_onTapStart: function (/** Event|TouchEvent */evt) {
+			var _this = this,
+				el = this.el,
+				options = this.options,
+				preventOnFilter = options.preventOnFilter,
+				type = evt.type,
+				touch = evt.touches && evt.touches[0],
+				target = (touch || evt).target,
+				originalTarget = evt.target.shadowRoot && (evt.path && evt.path[0]) || target,
+				filter = options.filter,
+				startIndex;
+
+			_saveInputCheckedState(el);
+
+
+			// Don't trigger start event when an element is been dragged, otherwise the evt.oldindex always wrong when set option.group.
+			if (dragEl) {
+				return;
+			}
+
+			if (/mousedown|pointerdown/.test(type) && evt.button !== 0 || options.disabled) {
+				return; // only left button or enabled
+			}
+
+			// cancel dnd if original target is content editable
+			if (originalTarget.isContentEditable) {
+				return;
+			}
+
+			target = _closest(target, options.draggable, el);
+
+			if (!target) {
+				return;
+			}
+
+			if (lastDownEl === target) {
+				// Ignoring duplicate `down`
+				return;
+			}
+
+			// Get the index of the dragged element within its parent
+			startIndex = _index(target, options.draggable);
+
+			// Check filter
+			if (typeof filter === 'function') {
+				if (filter.call(this, evt, target, this)) {
+					_dispatchEvent(_this, originalTarget, 'filter', target, el, el, startIndex);
+					preventOnFilter && evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+			else if (filter) {
+				filter = filter.split(',').some(function (criteria) {
+					criteria = _closest(originalTarget, criteria.trim(), el);
+
+					if (criteria) {
+						_dispatchEvent(_this, criteria, 'filter', target, el, el, startIndex);
+						return true;
+					}
+				});
+
+				if (filter) {
+					preventOnFilter && evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+
+			if (options.handle && !_closest(originalTarget, options.handle, el)) {
+				return;
+			}
+
+			// Prepare `dragstart`
+			this._prepareDragStart(evt, touch, target, startIndex);
+		},
+
+		_prepareDragStart: function (/** Event */evt, /** Touch */touch, /** HTMLElement */target, /** Number */startIndex) {
+			var _this = this,
+				el = _this.el,
+				options = _this.options,
+				ownerDocument = el.ownerDocument,
+				dragStartFn;
+
+			if (target && !dragEl && (target.parentNode === el)) {
+				tapEvt = evt;
+
+				rootEl = el;
+				dragEl = target;
+				parentEl = dragEl.parentNode;
+				nextEl = dragEl.nextSibling;
+				lastDownEl = target;
+				activeGroup = options.group;
+				oldIndex = startIndex;
+
+				this._lastX = (touch || evt).clientX;
+				this._lastY = (touch || evt).clientY;
+
+				dragEl.style['will-change'] = 'all';
+
+				dragStartFn = function () {
+					// Delayed drag has been triggered
+					// we can re-enable the events: touchmove/mousemove
+					_this._disableDelayedDrag();
+
+					// Make the element draggable
+					dragEl.draggable = _this.nativeDraggable;
+
+					// Chosen item
+					_toggleClass(dragEl, options.chosenClass, true);
+
+					// Bind the events: dragstart/dragend
+					_this._triggerDragStart(evt, touch);
+
+					// Drag start event
+					_dispatchEvent(_this, rootEl, 'choose', dragEl, rootEl, rootEl, oldIndex);
+				};
+
+				// Disable "draggable"
+				options.ignore.split(',').forEach(function (criteria) {
+					_find(dragEl, criteria.trim(), _disableDraggable);
+				});
+
+				_on(ownerDocument, 'mouseup', _this._onDrop);
+				_on(ownerDocument, 'touchend', _this._onDrop);
+				_on(ownerDocument, 'touchcancel', _this._onDrop);
+				_on(ownerDocument, 'selectstart', _this);
+				options.supportPointer && _on(ownerDocument, 'pointercancel', _this._onDrop);
+
+				if (options.delay) {
+					// If the user moves the pointer or let go the click or touch
+					// before the delay has been reached:
+					// disable the delayed drag
+					_on(ownerDocument, 'mouseup', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchend', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchcancel', _this._disableDelayedDrag);
+					_on(ownerDocument, 'mousemove', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchmove', _this._disableDelayedDrag);
+					options.supportPointer && _on(ownerDocument, 'pointermove', _this._disableDelayedDrag);
+
+					_this._dragStartTimer = setTimeout(dragStartFn, options.delay);
+				} else {
+					dragStartFn();
+				}
+
+
+			}
+		},
+
+		_disableDelayedDrag: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			clearTimeout(this._dragStartTimer);
+			_off(ownerDocument, 'mouseup', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchend', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchcancel', this._disableDelayedDrag);
+			_off(ownerDocument, 'mousemove', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchmove', this._disableDelayedDrag);
+			_off(ownerDocument, 'pointermove', this._disableDelayedDrag);
+		},
+
+		_triggerDragStart: function (/** Event */evt, /** Touch */touch) {
+			touch = touch || (evt.pointerType == 'touch' ? evt : null);
+
+			if (touch) {
+				// Touch device support
+				tapEvt = {
+					target: dragEl,
+					clientX: touch.clientX,
+					clientY: touch.clientY
+				};
+
+				this._onDragStart(tapEvt, 'touch');
+			}
+			else if (!this.nativeDraggable) {
+				this._onDragStart(tapEvt, true);
+			}
+			else {
+				_on(dragEl, 'dragend', this);
+				_on(rootEl, 'dragstart', this._onDragStart);
+			}
+
+			try {
+				if (document.selection) {
+					// Timeout neccessary for IE9
+					_nextTick(function () {
+						document.selection.empty();
+					});
+				} else {
+					window.getSelection().removeAllRanges();
+				}
+			} catch (err) {
+			}
+		},
+
+		_dragStarted: function () {
+			if (rootEl && dragEl) {
+				var options = this.options;
+
+				// Apply effect
+				_toggleClass(dragEl, options.ghostClass, true);
+				_toggleClass(dragEl, options.dragClass, false);
+
+				Sortable.active = this;
+
+				// Drag start event
+				_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, rootEl, oldIndex);
+			} else {
+				this._nulling();
+			}
+		},
+
+		_emulateDragOver: function () {
+			if (touchEvt) {
+				if (this._lastX === touchEvt.clientX && this._lastY === touchEvt.clientY) {
+					return;
+				}
+
+				this._lastX = touchEvt.clientX;
+				this._lastY = touchEvt.clientY;
+
+				if (!supportCssPointerEvents) {
+					_css(ghostEl, 'display', 'none');
+				}
+
+				var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY);
+				var parent = target;
+				var i = touchDragOverListeners.length;
+
+				if (target && target.shadowRoot) {
+					target = target.shadowRoot.elementFromPoint(touchEvt.clientX, touchEvt.clientY);
+					parent = target;
+				}
+
+				if (parent) {
+					do {
+						if (parent[expando]) {
+							while (i--) {
+								touchDragOverListeners[i]({
+									clientX: touchEvt.clientX,
+									clientY: touchEvt.clientY,
+									target: target,
+									rootEl: parent
+								});
+							}
+
+							break;
+						}
+
+						target = parent; // store last element
+					}
+					/* jshint boss:true */
+					while (parent = parent.parentNode);
+				}
+
+				if (!supportCssPointerEvents) {
+					_css(ghostEl, 'display', '');
+				}
+			}
+		},
+
+
+		_onTouchMove: function (/**TouchEvent*/evt) {
+			if (tapEvt) {
+				var	options = this.options,
+					fallbackTolerance = options.fallbackTolerance,
+					fallbackOffset = options.fallbackOffset,
+					touch = evt.touches ? evt.touches[0] : evt,
+					dx = (touch.clientX - tapEvt.clientX) + fallbackOffset.x,
+					dy = (touch.clientY - tapEvt.clientY) + fallbackOffset.y,
+					translate3d = evt.touches ? 'translate3d(' + dx + 'px,' + dy + 'px,0)' : 'translate(' + dx + 'px,' + dy + 'px)';
+
+				// only set the status to dragging, when we are actually dragging
+				if (!Sortable.active) {
+					if (fallbackTolerance &&
+						min(abs(touch.clientX - this._lastX), abs(touch.clientY - this._lastY)) < fallbackTolerance
+					) {
+						return;
+					}
+
+					this._dragStarted();
+				}
+
+				// as well as creating the ghost element on the document body
+				this._appendGhost();
+
+				moved = true;
+				touchEvt = touch;
+
+				_css(ghostEl, 'webkitTransform', translate3d);
+				_css(ghostEl, 'mozTransform', translate3d);
+				_css(ghostEl, 'msTransform', translate3d);
+				_css(ghostEl, 'transform', translate3d);
+
+				evt.preventDefault();
+			}
+		},
+
+		_appendGhost: function () {
+			if (!ghostEl) {
+				var rect = dragEl.getBoundingClientRect(),
+					css = _css(dragEl),
+					options = this.options,
+					ghostRect;
+
+				ghostEl = dragEl.cloneNode(true);
+
+				_toggleClass(ghostEl, options.ghostClass, false);
+				_toggleClass(ghostEl, options.fallbackClass, true);
+				_toggleClass(ghostEl, options.dragClass, true);
+
+				_css(ghostEl, 'top', rect.top - parseInt(css.marginTop, 10));
+				_css(ghostEl, 'left', rect.left - parseInt(css.marginLeft, 10));
+				_css(ghostEl, 'width', rect.width);
+				_css(ghostEl, 'height', rect.height);
+				_css(ghostEl, 'opacity', '0.8');
+				_css(ghostEl, 'position', 'fixed');
+				_css(ghostEl, 'zIndex', '100000');
+				_css(ghostEl, 'pointerEvents', 'none');
+
+				options.fallbackOnBody && document.body.appendChild(ghostEl) || rootEl.appendChild(ghostEl);
+
+				// Fixing dimensions.
+				ghostRect = ghostEl.getBoundingClientRect();
+				_css(ghostEl, 'width', rect.width * 2 - ghostRect.width);
+				_css(ghostEl, 'height', rect.height * 2 - ghostRect.height);
+			}
+		},
+
+		_onDragStart: function (/**Event*/evt, /**boolean*/useFallback) {
+			var _this = this;
+			var dataTransfer = evt.dataTransfer;
+			var options = _this.options;
+
+			_this._offUpEvents();
+
+			if (activeGroup.checkPull(_this, _this, dragEl, evt)) {
+				cloneEl = _clone(dragEl);
+
+				cloneEl.draggable = false;
+				cloneEl.style['will-change'] = '';
+
+				_css(cloneEl, 'display', 'none');
+				_toggleClass(cloneEl, _this.options.chosenClass, false);
+
+				// #1143: IFrame support workaround
+				_this._cloneId = _nextTick(function () {
+					rootEl.insertBefore(cloneEl, dragEl);
+					_dispatchEvent(_this, rootEl, 'clone', dragEl);
+				});
+			}
+
+			_toggleClass(dragEl, options.dragClass, true);
+
+			if (useFallback) {
+				if (useFallback === 'touch') {
+					// Bind touch events
+					_on(document, 'touchmove', _this._onTouchMove);
+					_on(document, 'touchend', _this._onDrop);
+					_on(document, 'touchcancel', _this._onDrop);
+
+					if (options.supportPointer) {
+						_on(document, 'pointermove', _this._onTouchMove);
+						_on(document, 'pointerup', _this._onDrop);
+					}
+				} else {
+					// Old brwoser
+					_on(document, 'mousemove', _this._onTouchMove);
+					_on(document, 'mouseup', _this._onDrop);
+				}
+
+				_this._loopId = setInterval(_this._emulateDragOver, 50);
+			}
+			else {
+				if (dataTransfer) {
+					dataTransfer.effectAllowed = 'move';
+					options.setData && options.setData.call(_this, dataTransfer, dragEl);
+				}
+
+				_on(document, 'drop', _this);
+
+				// #1143: Бывает элемент с IFrame внутри блокирует `drop`,
+				// поэтому если вызвался `mouseover`, значит надо отменять весь d'n'd.
+				// Breaking Chrome 62+
+				// _on(document, 'mouseover', _this);
+
+				_this._dragStartId = _nextTick(_this._dragStarted);
+			}
+		},
+
+		_onDragOver: function (/**Event*/evt) {
+			var el = this.el,
+				target,
+				dragRect,
+				targetRect,
+				revert,
+				options = this.options,
+				group = options.group,
+				activeSortable = Sortable.active,
+				isOwner = (activeGroup === group),
+				isMovingBetweenSortable = false,
+				canSort = options.sort;
+
+			if (evt.preventDefault !== void 0) {
+				evt.preventDefault();
+				!options.dragoverBubble && evt.stopPropagation();
+			}
+
+			if (dragEl.animated) {
+				return;
+			}
+
+			moved = true;
+
+			if (activeSortable && !options.disabled &&
+				(isOwner
+					? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
+					: (
+						putSortable === this ||
+						(
+							(activeSortable.lastPullMode = activeGroup.checkPull(this, activeSortable, dragEl, evt)) &&
+							group.checkPut(this, activeSortable, dragEl, evt)
+						)
+					)
+				) &&
+				(evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
+			) {
+				// Smart auto-scrolling
+				_autoScroll(evt, options, this.el);
+
+				if (_silent) {
+					return;
+				}
+
+				target = _closest(evt.target, options.draggable, el);
+				dragRect = dragEl.getBoundingClientRect();
+
+				if (putSortable !== this) {
+					putSortable = this;
+					isMovingBetweenSortable = true;
+				}
+
+				if (revert) {
+					_cloneHide(activeSortable, true);
+					parentEl = rootEl; // actualization
+
+					if (cloneEl || nextEl) {
+						rootEl.insertBefore(dragEl, cloneEl || nextEl);
+					}
+					else if (!canSort) {
+						rootEl.appendChild(dragEl);
+					}
+
+					return;
+				}
+
+
+				if ((el.children.length === 0) || (el.children[0] === ghostEl) ||
+					(el === evt.target) && (_ghostIsLast(el, evt))
+				) {
+					//assign target only if condition is true
+					if (el.children.length !== 0 && el.children[0] !== ghostEl && el === evt.target) {
+						target = el.lastElementChild;
+					}
+
+					if (target) {
+						if (target.animated) {
+							return;
+						}
+
+						targetRect = target.getBoundingClientRect();
+					}
+
+					_cloneHide(activeSortable, isOwner);
+
+					if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt) !== false) {
+						if (!dragEl.contains(el)) {
+							el.appendChild(dragEl);
+							parentEl = el; // actualization
+						}
+
+						this._animate(dragRect, dragEl);
+						target && this._animate(targetRect, target);
+					}
+				}
+				else if (target && !target.animated && target !== dragEl && (target.parentNode[expando] !== void 0)) {
+					if (lastEl !== target) {
+						lastEl = target;
+						lastCSS = _css(target);
+						lastParentCSS = _css(target.parentNode);
+					}
+
+					targetRect = target.getBoundingClientRect();
+
+					var width = targetRect.right - targetRect.left,
+						height = targetRect.bottom - targetRect.top,
+						floating = R_FLOAT.test(lastCSS.cssFloat + lastCSS.display)
+							|| (lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0),
+						isWide = (target.offsetWidth > dragEl.offsetWidth),
+						isLong = (target.offsetHeight > dragEl.offsetHeight),
+						halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
+						nextSibling = target.nextElementSibling,
+						after = false
+					;
+
+					if (floating) {
+						var elTop = dragEl.offsetTop,
+							tgTop = target.offsetTop;
+
+						if (elTop === tgTop) {
+							after = (target.previousElementSibling === dragEl) && !isWide || halfway && isWide;
+						}
+						else if (target.previousElementSibling === dragEl || dragEl.previousElementSibling === target) {
+							after = (evt.clientY - targetRect.top) / height > 0.5;
+						} else {
+							after = tgTop > elTop;
+						}
+						} else if (!isMovingBetweenSortable) {
+						after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
+					}
+
+					var moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, after);
+
+					if (moveVector !== false) {
+						if (moveVector === 1 || moveVector === -1) {
+							after = (moveVector === 1);
+						}
+
+						_silent = true;
+						setTimeout(_unsilent, 30);
+
+						_cloneHide(activeSortable, isOwner);
+
+						if (!dragEl.contains(el)) {
+							if (after && !nextSibling) {
+								el.appendChild(dragEl);
+							} else {
+								target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+							}
+						}
+
+						parentEl = dragEl.parentNode; // actualization
+
+						this._animate(dragRect, dragEl);
+						this._animate(targetRect, target);
+					}
+				}
+			}
+		},
+
+		_animate: function (prevRect, target) {
+			var ms = this.options.animation;
+
+			if (ms) {
+				var currentRect = target.getBoundingClientRect();
+
+				if (prevRect.nodeType === 1) {
+					prevRect = prevRect.getBoundingClientRect();
+				}
+
+				_css(target, 'transition', 'none');
+				_css(target, 'transform', 'translate3d('
+					+ (prevRect.left - currentRect.left) + 'px,'
+					+ (prevRect.top - currentRect.top) + 'px,0)'
+				);
+
+				target.offsetWidth; // repaint
+
+				_css(target, 'transition', 'all ' + ms + 'ms');
+				_css(target, 'transform', 'translate3d(0,0,0)');
+
+				clearTimeout(target.animated);
+				target.animated = setTimeout(function () {
+					_css(target, 'transition', '');
+					_css(target, 'transform', '');
+					target.animated = false;
+				}, ms);
+			}
+		},
+
+		_offUpEvents: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			_off(document, 'touchmove', this._onTouchMove);
+			_off(document, 'pointermove', this._onTouchMove);
+			_off(ownerDocument, 'mouseup', this._onDrop);
+			_off(ownerDocument, 'touchend', this._onDrop);
+			_off(ownerDocument, 'pointerup', this._onDrop);
+			_off(ownerDocument, 'touchcancel', this._onDrop);
+			_off(ownerDocument, 'pointercancel', this._onDrop);
+			_off(ownerDocument, 'selectstart', this);
+		},
+
+		_onDrop: function (/**Event*/evt) {
+			var el = this.el,
+				options = this.options;
+
+			clearInterval(this._loopId);
+			clearInterval(autoScroll.pid);
+			clearTimeout(this._dragStartTimer);
+
+			_cancelNextTick(this._cloneId);
+			_cancelNextTick(this._dragStartId);
+
+			// Unbind events
+			_off(document, 'mouseover', this);
+			_off(document, 'mousemove', this._onTouchMove);
+
+			if (this.nativeDraggable) {
+				_off(document, 'drop', this);
+				_off(el, 'dragstart', this._onDragStart);
+			}
+
+			this._offUpEvents();
+
+			if (evt) {
+				if (moved) {
+					evt.preventDefault();
+					!options.dropBubble && evt.stopPropagation();
+				}
+
+				ghostEl && ghostEl.parentNode && ghostEl.parentNode.removeChild(ghostEl);
+
+				if (rootEl === parentEl || Sortable.active.lastPullMode !== 'clone') {
+					// Remove clone
+					cloneEl && cloneEl.parentNode && cloneEl.parentNode.removeChild(cloneEl);
+				}
+
+				if (dragEl) {
+					if (this.nativeDraggable) {
+						_off(dragEl, 'dragend', this);
+					}
+
+					_disableDraggable(dragEl);
+					dragEl.style['will-change'] = '';
+
+					// Remove class's
+					_toggleClass(dragEl, this.options.ghostClass, false);
+					_toggleClass(dragEl, this.options.chosenClass, false);
+
+					// Drag stop event
+					_dispatchEvent(this, rootEl, 'unchoose', dragEl, parentEl, rootEl, oldIndex);
+
+					if (rootEl !== parentEl) {
+						newIndex = _index(dragEl, options.draggable);
+
+						if (newIndex >= 0) {
+							// Add event
+							_dispatchEvent(null, parentEl, 'add', dragEl, parentEl, rootEl, oldIndex, newIndex);
+
+							// Remove event
+							_dispatchEvent(this, rootEl, 'remove', dragEl, parentEl, rootEl, oldIndex, newIndex);
+
+							// drag from one list and drop into another
+							_dispatchEvent(null, parentEl, 'sort', dragEl, parentEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'sort', dragEl, parentEl, rootEl, oldIndex, newIndex);
+						}
+					}
+					else {
+						if (dragEl.nextSibling !== nextEl) {
+							// Get the index of the dragged element within its parent
+							newIndex = _index(dragEl, options.draggable);
+
+							if (newIndex >= 0) {
+								// drag & drop within the same list
+								_dispatchEvent(this, rootEl, 'update', dragEl, parentEl, rootEl, oldIndex, newIndex);
+								_dispatchEvent(this, rootEl, 'sort', dragEl, parentEl, rootEl, oldIndex, newIndex);
+							}
+						}
+					}
+
+					if (Sortable.active) {
+						/* jshint eqnull:true */
+						if (newIndex == null || newIndex === -1) {
+							newIndex = oldIndex;
+						}
+
+						_dispatchEvent(this, rootEl, 'end', dragEl, parentEl, rootEl, oldIndex, newIndex);
+
+						// Save sorting
+						this.save();
+					}
+				}
+
+			}
+
+			this._nulling();
+		},
+
+		_nulling: function() {
+			rootEl =
+			dragEl =
+			parentEl =
+			ghostEl =
+			nextEl =
+			cloneEl =
+			lastDownEl =
+
+			scrollEl =
+			scrollParentEl =
+
+			tapEvt =
+			touchEvt =
+
+			moved =
+			newIndex =
+
+			lastEl =
+			lastCSS =
+
+			putSortable =
+			activeGroup =
+			Sortable.active = null;
+
+			savedInputChecked.forEach(function (el) {
+				el.checked = true;
+			});
+			savedInputChecked.length = 0;
+		},
+
+		handleEvent: function (/**Event*/evt) {
+			switch (evt.type) {
+				case 'drop':
+				case 'dragend':
+					this._onDrop(evt);
+					break;
+
+				case 'dragover':
+				case 'dragenter':
+					if (dragEl) {
+						this._onDragOver(evt);
+						_globalDragOver(evt);
+					}
+					break;
+
+				case 'mouseover':
+					this._onDrop(evt);
+					break;
+
+				case 'selectstart':
+					evt.preventDefault();
+					break;
+			}
+		},
+
+
+		/**
+		 * Serializes the item into an array of string.
+		 * @returns {String[]}
+		 */
+		toArray: function () {
+			var order = [],
+				el,
+				children = this.el.children,
+				i = 0,
+				n = children.length,
+				options = this.options;
+
+			for (; i < n; i++) {
+				el = children[i];
+				if (_closest(el, options.draggable, this.el)) {
+					order.push(el.getAttribute(options.dataIdAttr) || _generateId(el));
+				}
+			}
+
+			return order;
+		},
+
+
+		/**
+		 * Sorts the elements according to the array.
+		 * @param  {String[]}  order  order of the items
+		 */
+		sort: function (order) {
+			var items = {}, rootEl = this.el;
+
+			this.toArray().forEach(function (id, i) {
+				var el = rootEl.children[i];
+
+				if (_closest(el, this.options.draggable, rootEl)) {
+					items[id] = el;
+				}
+			}, this);
+
+			order.forEach(function (id) {
+				if (items[id]) {
+					rootEl.removeChild(items[id]);
+					rootEl.appendChild(items[id]);
+				}
+			});
+		},
+
+
+		/**
+		 * Save the current sorting
+		 */
+		save: function () {
+			var store = this.options.store;
+			store && store.set(this);
+		},
+
+
+		/**
+		 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
+		 * @param   {HTMLElement}  el
+		 * @param   {String}       [selector]  default: `options.draggable`
+		 * @returns {HTMLElement|null}
+		 */
+		closest: function (el, selector) {
+			return _closest(el, selector || this.options.draggable, this.el);
+		},
+
+
+		/**
+		 * Set/get option
+		 * @param   {string} name
+		 * @param   {*}      [value]
+		 * @returns {*}
+		 */
+		option: function (name, value) {
+			var options = this.options;
+
+			if (value === void 0) {
+				return options[name];
+			} else {
+				options[name] = value;
+
+				if (name === 'group') {
+					_prepareGroup(options);
+				}
+			}
+		},
+
+
+		/**
+		 * Destroy
+		 */
+		destroy: function () {
+			var el = this.el;
+
+			el[expando] = null;
+
+			_off(el, 'mousedown', this._onTapStart);
+			_off(el, 'touchstart', this._onTapStart);
+			_off(el, 'pointerdown', this._onTapStart);
+
+			if (this.nativeDraggable) {
+				_off(el, 'dragover', this);
+				_off(el, 'dragenter', this);
+			}
+
+			// Remove draggable attributes
+			Array.prototype.forEach.call(el.querySelectorAll('[draggable]'), function (el) {
+				el.removeAttribute('draggable');
+			});
+
+			touchDragOverListeners.splice(touchDragOverListeners.indexOf(this._onDragOver), 1);
+
+			this._onDrop();
+
+			this.el = el = null;
+		}
+	};
+
+
+	function _cloneHide(sortable, state) {
+		if (sortable.lastPullMode !== 'clone') {
+			state = true;
+		}
+
+		if (cloneEl && (cloneEl.state !== state)) {
+			_css(cloneEl, 'display', state ? 'none' : '');
+
+			if (!state) {
+				if (cloneEl.state) {
+					if (sortable.options.group.revertClone) {
+						rootEl.insertBefore(cloneEl, nextEl);
+						sortable._animate(dragEl, cloneEl);
+					} else {
+						rootEl.insertBefore(cloneEl, dragEl);
+					}
+				}
+			}
+
+			cloneEl.state = state;
+		}
+	}
+
+
+	function _closest(/**HTMLElement*/el, /**String*/selector, /**HTMLElement*/ctx) {
+		if (el) {
+			ctx = ctx || document;
+
+			do {
+				if ((selector === '>*' && el.parentNode === ctx) || _matches(el, selector)) {
+					return el;
+				}
+				/* jshint boss:true */
+			} while (el = _getParentOrHost(el));
+		}
+
+		return null;
+	}
+
+
+	function _getParentOrHost(el) {
+		var parent = el.host;
+
+		return (parent && parent.nodeType) ? parent : el.parentNode;
+	}
+
+
+	function _globalDragOver(/**Event*/evt) {
+		if (evt.dataTransfer) {
+			evt.dataTransfer.dropEffect = 'move';
+		}
+		evt.preventDefault();
+	}
+
+
+	function _on(el, event, fn) {
+		el.addEventListener(event, fn, captureMode);
+	}
+
+
+	function _off(el, event, fn) {
+		el.removeEventListener(event, fn, captureMode);
+	}
+
+
+	function _toggleClass(el, name, state) {
+		if (el) {
+			if (el.classList) {
+				el.classList[state ? 'add' : 'remove'](name);
+			}
+			else {
+				var className = (' ' + el.className + ' ').replace(R_SPACE, ' ').replace(' ' + name + ' ', ' ');
+				el.className = (className + (state ? ' ' + name : '')).replace(R_SPACE, ' ');
+			}
+		}
+	}
+
+
+	function _css(el, prop, val) {
+		var style = el && el.style;
+
+		if (style) {
+			if (val === void 0) {
+				if (document.defaultView && document.defaultView.getComputedStyle) {
+					val = document.defaultView.getComputedStyle(el, '');
+				}
+				else if (el.currentStyle) {
+					val = el.currentStyle;
+				}
+
+				return prop === void 0 ? val : val[prop];
+			}
+			else {
+				if (!(prop in style)) {
+					prop = '-webkit-' + prop;
+				}
+
+				style[prop] = val + (typeof val === 'string' ? '' : 'px');
+			}
+		}
+	}
+
+
+	function _find(ctx, tagName, iterator) {
+		if (ctx) {
+			var list = ctx.getElementsByTagName(tagName), i = 0, n = list.length;
+
+			if (iterator) {
+				for (; i < n; i++) {
+					iterator(list[i], i);
+				}
+			}
+
+			return list;
+		}
+
+		return [];
+	}
+
+
+
+	function _dispatchEvent(sortable, rootEl, name, targetEl, toEl, fromEl, startIndex, newIndex) {
+		sortable = (sortable || rootEl[expando]);
+
+		var evt = document.createEvent('Event'),
+			options = sortable.options,
+			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+
+		evt.initEvent(name, true, true);
+
+		evt.to = toEl || rootEl;
+		evt.from = fromEl || rootEl;
+		evt.item = targetEl || rootEl;
+		evt.clone = cloneEl;
+
+		evt.oldIndex = startIndex;
+		evt.newIndex = newIndex;
+
+		rootEl.dispatchEvent(evt);
+
+		if (options[onName]) {
+			options[onName].call(sortable, evt);
+		}
+	}
+
+
+	function _onMove(fromEl, toEl, dragEl, dragRect, targetEl, targetRect, originalEvt, willInsertAfter) {
+		var evt,
+			sortable = fromEl[expando],
+			onMoveFn = sortable.options.onMove,
+			retVal;
+
+		evt = document.createEvent('Event');
+		evt.initEvent('move', true, true);
+
+		evt.to = toEl;
+		evt.from = fromEl;
+		evt.dragged = dragEl;
+		evt.draggedRect = dragRect;
+		evt.related = targetEl || toEl;
+		evt.relatedRect = targetRect || toEl.getBoundingClientRect();
+		evt.willInsertAfter = willInsertAfter;
+
+		fromEl.dispatchEvent(evt);
+
+		if (onMoveFn) {
+			retVal = onMoveFn.call(sortable, evt, originalEvt);
+		}
+
+		return retVal;
+	}
+
+
+	function _disableDraggable(el) {
+		el.draggable = false;
+	}
+
+
+	function _unsilent() {
+		_silent = false;
+	}
+
+
+	/** @returns {HTMLElement|false} */
+	function _ghostIsLast(el, evt) {
+		var lastEl = el.lastElementChild,
+			rect = lastEl.getBoundingClientRect();
+
+		// 5 — min delta
+		// abs — нельзя добавлять, а то глюки при наведении сверху
+		return (evt.clientY - (rect.top + rect.height) > 5) ||
+			(evt.clientX - (rect.left + rect.width) > 5);
+	}
+
+
+	/**
+	 * Generate id
+	 * @param   {HTMLElement} el
+	 * @returns {String}
+	 * @private
+	 */
+	function _generateId(el) {
+		var str = el.tagName + el.className + el.src + el.href + el.textContent,
+			i = str.length,
+			sum = 0;
+
+		while (i--) {
+			sum += str.charCodeAt(i);
+		}
+
+		return sum.toString(36);
+	}
+
+	/**
+	 * Returns the index of an element within its parent for a selected set of
+	 * elements
+	 * @param  {HTMLElement} el
+	 * @param  {selector} selector
+	 * @return {number}
+	 */
+	function _index(el, selector) {
+		var index = 0;
+
+		if (!el || !el.parentNode) {
+			return -1;
+		}
+
+		while (el && (el = el.previousElementSibling)) {
+			if ((el.nodeName.toUpperCase() !== 'TEMPLATE') && (selector === '>*' || _matches(el, selector))) {
+				index++;
+			}
+		}
+
+		return index;
+	}
+
+	function _matches(/**HTMLElement*/el, /**String*/selector) {
+		if (el) {
+			selector = selector.split('.');
+
+			var tag = selector.shift().toUpperCase(),
+				re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
+
+			return (
+				(tag === '' || el.nodeName.toUpperCase() == tag) &&
+				(!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length)
+			);
+		}
+
+		return false;
+	}
+
+	function _throttle(callback, ms) {
+		var args, _this;
+
+		return function () {
+			if (args === void 0) {
+				args = arguments;
+				_this = this;
+
+				setTimeout(function () {
+					if (args.length === 1) {
+						callback.call(_this, args[0]);
+					} else {
+						callback.apply(_this, args);
+					}
+
+					args = void 0;
+				}, ms);
+			}
+		};
+	}
+
+	function _extend(dst, src) {
+		if (dst && src) {
+			for (var key in src) {
+				if (src.hasOwnProperty(key)) {
+					dst[key] = src[key];
+				}
+			}
+		}
+
+		return dst;
+	}
+
+	function _clone(el) {
+		if (Polymer && Polymer.dom) {
+			return Polymer.dom(el).cloneNode(true);
+		}
+		else if ($) {
+			return $(el).clone(true)[0];
+		}
+		else {
+			return el.cloneNode(true);
+		}
+	}
+
+	function _saveInputCheckedState(root) {
+		var inputs = root.getElementsByTagName('input');
+		var idx = inputs.length;
+
+		while (idx--) {
+			var el = inputs[idx];
+			el.checked && savedInputChecked.push(el);
+		}
+	}
+
+	function _nextTick(fn) {
+		return setTimeout(fn, 0);
+	}
+
+	function _cancelNextTick(id) {
+		return clearTimeout(id);
+	}
+
+	// Fixed #973:
+	_on(document, 'touchmove', function (evt) {
+		if (Sortable.active) {
+			evt.preventDefault();
+		}
+	});
+
+	// Export utils
+	Sortable.utils = {
+		on: _on,
+		off: _off,
+		css: _css,
+		find: _find,
+		is: function (el, selector) {
+			return !!_closest(el, selector, el);
+		},
+		extend: _extend,
+		throttle: _throttle,
+		closest: _closest,
+		toggleClass: _toggleClass,
+		clone: _clone,
+		index: _index,
+		nextTick: _nextTick,
+		cancelNextTick: _cancelNextTick
+	};
+
+
+	/**
+	 * Create sortable instance
+	 * @param {HTMLElement}  el
+	 * @param {Object}      [options]
+	 */
+	Sortable.create = function (el, options) {
+		return new Sortable(el, options);
+	};
+
+
+	// Export
+	Sortable.version = '1.7.0';
+	return Sortable;
+});
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
+
+/***/ }),
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59340,7 +60835,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Dragger);
 
 /***/ }),
-/* 394 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59372,51 +60867,51 @@ var _Icon = __webpack_require__(20);
 
 var _Icon2 = _interopRequireDefault(_Icon);
 
-var _AddToPlaylistModal = __webpack_require__(395);
+var _AddToPlaylistModal = __webpack_require__(396);
 
 var _AddToPlaylistModal2 = _interopRequireDefault(_AddToPlaylistModal);
 
-var _AddToQueueModal = __webpack_require__(396);
+var _AddToQueueModal = __webpack_require__(397);
 
 var _AddToQueueModal2 = _interopRequireDefault(_AddToQueueModal);
 
-var _CreatePlaylistModal = __webpack_require__(397);
+var _CreatePlaylistModal = __webpack_require__(398);
 
 var _CreatePlaylistModal2 = _interopRequireDefault(_CreatePlaylistModal);
 
-var _EditPlaylistModal = __webpack_require__(398);
+var _EditPlaylistModal = __webpack_require__(399);
 
 var _EditPlaylistModal2 = _interopRequireDefault(_EditPlaylistModal);
 
-var _EditRadioModal = __webpack_require__(399);
+var _EditRadioModal = __webpack_require__(400);
 
 var _EditRadioModal2 = _interopRequireDefault(_EditRadioModal);
 
-var _ImageZoomModal = __webpack_require__(400);
+var _ImageZoomModal = __webpack_require__(401);
 
 var _ImageZoomModal2 = _interopRequireDefault(_ImageZoomModal);
 
-var _KioskModeModal = __webpack_require__(401);
+var _KioskModeModal = __webpack_require__(402);
 
 var _KioskModeModal2 = _interopRequireDefault(_KioskModeModal);
 
-var _SearchURISchemesModal = __webpack_require__(402);
+var _SearchURISchemesModal = __webpack_require__(403);
 
 var _SearchURISchemesModal2 = _interopRequireDefault(_SearchURISchemesModal);
 
-var _VolumeModal = __webpack_require__(403);
+var _VolumeModal = __webpack_require__(404);
 
 var _VolumeModal2 = _interopRequireDefault(_VolumeModal);
 
-var _AuthorizationModal_Send = __webpack_require__(404);
+var _AuthorizationModal_Send = __webpack_require__(405);
 
 var _AuthorizationModal_Send2 = _interopRequireDefault(_AuthorizationModal_Send);
 
-var _AuthorizationModal_Receive = __webpack_require__(405);
+var _AuthorizationModal_Receive = __webpack_require__(406);
 
 var _AuthorizationModal_Receive2 = _interopRequireDefault(_AuthorizationModal_Receive);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -59432,7 +60927,7 @@ var _actions4 = __webpack_require__(10);
 
 var spotifyActions = _interopRequireWildcard(_actions4);
 
-var _actions5 = __webpack_require__(23);
+var _actions5 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions5);
 
@@ -59604,10 +61099,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Modal);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 395 */
+/* 396 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59770,7 +61265,7 @@ var AddToPlaylistModal = function (_React$Component) {
 exports.default = AddToPlaylistModal;
 
 /***/ }),
-/* 396 */
+/* 397 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59929,7 +61424,7 @@ var AddToQueueModal = function (_React$Component) {
 exports.default = AddToQueueModal;
 
 /***/ }),
-/* 397 */
+/* 398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60185,7 +61680,7 @@ var CreatePlaylistModal = function (_React$Component) {
 exports.default = CreatePlaylistModal;
 
 /***/ }),
-/* 398 */
+/* 399 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60402,7 +61897,7 @@ var EditPlaylistModal = function (_React$Component) {
 exports.default = EditPlaylistModal;
 
 /***/ }),
-/* 399 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60758,7 +62253,7 @@ var EditRadioModal = function (_React$Component) {
 exports.default = EditRadioModal;
 
 /***/ }),
-/* 400 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60844,7 +62339,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ImageZoomModal);
 
 /***/ }),
-/* 401 */
+/* 402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -60954,7 +62449,7 @@ var KioskModeModal = function (_React$Component) {
 exports.default = KioskModeModal;
 
 /***/ }),
-/* 402 */
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61102,7 +62597,7 @@ var SearchURISchemesModal = function (_React$Component) {
 exports.default = SearchURISchemesModal;
 
 /***/ }),
-/* 403 */
+/* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61201,7 +62696,7 @@ var VolumeModal = function (_React$Component) {
 exports.default = VolumeModal;
 
 /***/ }),
-/* 404 */
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61348,7 +62843,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AuthorizationModal_Send);
 
 /***/ }),
-/* 405 */
+/* 406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61489,7 +62984,7 @@ var _class = function (_React$Component) {
 exports.default = _class;
 
 /***/ }),
-/* 406 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61681,7 +63176,7 @@ var Notifications = function (_React$Component) {
 exports.default = Notifications;
 
 /***/ }),
-/* 407 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -61888,7 +63383,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(DebugInfo);
 
 /***/ }),
-/* 408 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62226,7 +63721,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Album);
 
 /***/ }),
-/* 409 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62280,7 +63775,7 @@ var _ArtistGrid = __webpack_require__(55);
 
 var _ArtistGrid2 = _interopRequireDefault(_ArtistGrid);
 
-var _RelatedArtists = __webpack_require__(410);
+var _RelatedArtists = __webpack_require__(411);
 
 var _RelatedArtists2 = _interopRequireDefault(_RelatedArtists);
 
@@ -62304,7 +63799,7 @@ var _actions2 = __webpack_require__(11);
 
 var mopidyActions = _interopRequireWildcard(_actions2);
 
-var _actions3 = __webpack_require__(23);
+var _actions3 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions3);
 
@@ -62783,7 +64278,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 410 */
+/* 411 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62867,7 +64362,7 @@ var RelatedArtists = function (_React$Component) {
 exports.default = RelatedArtists;
 
 /***/ }),
-/* 411 */
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62937,7 +64432,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -63308,7 +64803,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Playlist);
 
 /***/ }),
-/* 412 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63553,7 +65048,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(User);
 
 /***/ }),
-/* 413 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -63603,7 +65098,7 @@ var _FollowButton = __webpack_require__(61);
 
 var _FollowButton2 = _interopRequireDefault(_FollowButton);
 
-var _LastfmLoveButton = __webpack_require__(414);
+var _LastfmLoveButton = __webpack_require__(415);
 
 var _LastfmLoveButton2 = _interopRequireDefault(_LastfmLoveButton);
 
@@ -63643,7 +65138,7 @@ var _actions4 = __webpack_require__(33);
 
 var lastfmActions = _interopRequireWildcard(_actions4);
 
-var _actions5 = __webpack_require__(415);
+var _actions5 = __webpack_require__(416);
 
 var geniusActions = _interopRequireWildcard(_actions5);
 
@@ -64031,7 +65526,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 414 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64162,7 +65657,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(FollowButton);
 
 /***/ }),
-/* 415 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64174,7 +65669,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.getTrackLyrics = getTrackLyrics;
 exports.findTrackLyrics = findTrackLyrics;
 
-var coreActions = __webpack_require__(22);
+var coreActions = __webpack_require__(23);
 var uiActions = __webpack_require__(5);
 var helpers = __webpack_require__(2);
 
@@ -64306,10 +65801,10 @@ function findTrackLyrics(track) {
         });
     };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 416 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64375,7 +65870,7 @@ var _actions = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions);
 
-var _actions2 = __webpack_require__(23);
+var _actions2 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions2);
 
@@ -64657,7 +66152,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 417 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64695,7 +66190,7 @@ var _actions = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions);
 
-var _actions2 = __webpack_require__(23);
+var _actions2 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions2);
 
@@ -64809,7 +66304,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 418 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -64839,7 +66334,7 @@ var _SpotifyAuthenticationFrame = __webpack_require__(165);
 
 var _SpotifyAuthenticationFrame2 = _interopRequireDefault(_SpotifyAuthenticationFrame);
 
-var _LastfmAuthenticationFrame = __webpack_require__(419);
+var _LastfmAuthenticationFrame = __webpack_require__(420);
 
 var _LastfmAuthenticationFrame2 = _interopRequireDefault(_LastfmAuthenticationFrame);
 
@@ -64879,7 +66374,7 @@ var _URILink = __webpack_require__(36);
 
 var _URILink2 = _interopRequireDefault(_URILink);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -64887,7 +66382,7 @@ var _actions2 = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions2);
 
-var _actions3 = __webpack_require__(23);
+var _actions3 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions3);
 
@@ -65774,7 +67269,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 419 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -65960,7 +67455,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LastfmAuthenticationFrame);
 
 /***/ }),
-/* 420 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66018,7 +67513,7 @@ var _actions = __webpack_require__(5);
 
 var uiActions = _interopRequireWildcard(_actions);
 
-var _actions2 = __webpack_require__(23);
+var _actions2 = __webpack_require__(24);
 
 var pusherActions = _interopRequireWildcard(_actions2);
 
@@ -66492,7 +67987,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 421 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66550,7 +68045,7 @@ var _LazyLoadListener = __webpack_require__(31);
 
 var _LazyLoadListener2 = _interopRequireDefault(_LazyLoadListener);
 
-var _SearchForm = __webpack_require__(422);
+var _SearchForm = __webpack_require__(423);
 
 var _SearchForm2 = _interopRequireDefault(_SearchForm);
 
@@ -66558,7 +68053,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -66645,6 +68140,18 @@ var Search = function (_React$Component) {
 			//this.props.spotifyActions.getURL(this.props['spotify_'+type+'_more'], 'SPOTIFY_SEARCH_RESULTS_LOADED_MORE_'+type.toUpperCase());
 		}
 	}, {
+		key: 'setSort',
+		value: function setSort(value) {
+			var reverse = false;
+			if (this.props.sort == value) reverse = !this.props.sort_reverse;
+
+			var data = {
+				search_results_sort_reverse: reverse,
+				search_results_sort: value
+			};
+			this.props.uiActions.set(data);
+		}
+	}, {
 		key: 'renderResults',
 		value: function renderResults() {
 			var _this2 = this;
@@ -66658,6 +68165,7 @@ var Search = function (_React$Component) {
 			if (this.props.spotify_search_results.artists) {
 				artists = [].concat(_toConsumableArray(artists), _toConsumableArray(helpers.getIndexedRecords(this.props.artists, this.props.spotify_search_results.artists)));
 			}
+			artists = helpers.sortItems(artists, this.props.sort, this.props.sort_reverse);
 
 			var albums = [];
 			if (this.props.mopidy_search_results.albums) {
@@ -66666,6 +68174,7 @@ var Search = function (_React$Component) {
 			if (this.props.spotify_search_results.albums) {
 				albums = [].concat(_toConsumableArray(albums), _toConsumableArray(helpers.getIndexedRecords(this.props.albums, this.props.spotify_search_results.albums)));
 			}
+			albums = helpers.sortItems(albums, this.props.sort, this.props.sort_reverse);
 
 			var playlists = [];
 			if (this.props.mopidy_search_results.playlists) {
@@ -66674,6 +68183,7 @@ var Search = function (_React$Component) {
 			if (this.props.spotify_search_results.playlists) {
 				playlists = [].concat(_toConsumableArray(playlists), _toConsumableArray(helpers.getIndexedRecords(this.props.playlists, this.props.spotify_search_results.playlists)));
 			}
+			playlists = helpers.sortItems(playlists, this.props.sort, this.props.sort_reverse);
 
 			var tracks = [];
 			if (this.props.mopidy_search_results.tracks) {
@@ -66682,6 +68192,7 @@ var Search = function (_React$Component) {
 			if (this.props.spotify_search_results.tracks) {
 				tracks = [].concat(_toConsumableArray(tracks), _toConsumableArray(this.props.spotify_search_results.tracks));
 			}
+			tracks = helpers.sortItems(tracks, this.props.sort, this.props.sort_reverse);
 
 			switch (this.props.view) {
 
@@ -66858,9 +68369,26 @@ var Search = function (_React$Component) {
 				label: 'Tracks'
 			}];
 
+			var sort_options = [{
+				value: 'name',
+				label: 'Name'
+			}, {
+				value: 'artists.name',
+				label: 'Artist'
+			}, {
+				value: 'duration',
+				label: 'Duration'
+			}, {
+				value: 'source',
+				label: 'Source'
+			}];
+
 			var options = _react2.default.createElement(
 				'span',
 				null,
+				_react2.default.createElement(_DropdownField2.default, { icon: 'sort', name: 'Sort', value: this.props.sort, options: sort_options, reverse: this.props.sort_reverse, handleChange: function handleChange(val) {
+						_this3.setSort(val);_this3.props.uiActions.hideContextMenu();
+					} }),
 				_react2.default.createElement(_DropdownField2.default, { icon: 'eye', name: 'View', value: this.props.view, options: view_options, handleChange: function handleChange(val) {
 						_this3.props.uiActions.set({ search_view: val });_this3.props.uiActions.hideContextMenu();
 					} }),
@@ -66902,7 +68430,9 @@ var mapStateToProps = function mapStateToProps(state, ownProps) {
 		tracks: state.core.tracks ? state.core.tracks : [],
 		search_uri_schemes: state.ui.search_uri_schemes ? state.ui.search_uri_schemes : [],
 		mopidy_search_results: state.mopidy.search_results ? state.mopidy.search_results : {},
-		spotify_search_results: state.spotify.search_results ? state.spotify.search_results : {}
+		spotify_search_results: state.spotify.search_results ? state.spotify.search_results : {},
+		sort: state.ui.search_results_sort ? state.ui.search_results_sort : 'name',
+		sort_reverse: state.ui.search_results_sort_reverse ? true : false
 	};
 };
 
@@ -66916,10 +68446,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Search);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 422 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67063,7 +68593,7 @@ exports.default = (0, _reactRedux.connect)(mapDispatchToProps)(SearchForm);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 423 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67111,7 +68641,7 @@ var _Parallax = __webpack_require__(44);
 
 var _Parallax2 = _interopRequireDefault(_Parallax);
 
-var _AddSeedField = __webpack_require__(424);
+var _AddSeedField = __webpack_require__(425);
 
 var _AddSeedField2 = _interopRequireDefault(_AddSeedField);
 
@@ -67464,7 +68994,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Discover);
 
 /***/ }),
-/* 424 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67494,7 +69024,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -67689,10 +69219,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AddSeedField);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 425 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67917,7 +69447,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 426 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67941,7 +69471,7 @@ var _Header = __webpack_require__(17);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _CategoryGrid = __webpack_require__(427);
+var _CategoryGrid = __webpack_require__(428);
 
 var _CategoryGrid2 = _interopRequireDefault(_CategoryGrid);
 
@@ -68041,7 +69571,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(DiscoverCategories);
 
 /***/ }),
-/* 427 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68111,7 +69641,7 @@ exports.default = CategoryGrid;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 428 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68273,7 +69803,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(DiscoverCategory);
 
 /***/ }),
-/* 429 */
+/* 430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68525,7 +70055,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 430 */
+/* 431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68863,7 +70393,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 431 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68925,7 +70455,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -69249,7 +70779,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 432 */
+/* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69403,7 +70933,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LibraryTracks);
 
 /***/ }),
-/* 433 */
+/* 434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69457,7 +70987,7 @@ var _helpers = __webpack_require__(2);
 
 var helpers = _interopRequireWildcard(_helpers);
 
-var _actions = __webpack_require__(22);
+var _actions = __webpack_require__(23);
 
 var coreActions = _interopRequireWildcard(_actions);
 
@@ -69774,7 +71304,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 434 */
+/* 435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -70106,7 +71636,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 435 */
+/* 436 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

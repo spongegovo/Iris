@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import FontAwesome from 'react-fontawesome'
+import Sortable from 'sortablejs'
 
 import Track from './Track'
 import ContextMenuTrigger from './ContextMenuTrigger'
@@ -17,22 +18,15 @@ class TrackList extends React.Component{
 		super(props)
 
 		this.touch_dragging_tracks_keys = false
-
-		this.handleKeyDown = this.handleKeyDown.bind(this)
-		this.handleTouchMove = this.handleTouchMove.bind(this)
-		this.handleTouchEnd = this.handleTouchEnd.bind(this)
 	}
 
-	componentWillMount(){
-		window.addEventListener("keydown", this.handleKeyDown, false)
-		window.addEventListener("touchmove", this.handleTouchMove, false)
-		window.addEventListener("touchend", this.handleTouchEnd, false)
+	componentDidMount(){
+		var element = document.getElementById('tracklist');
+		this._sortable = Sortable.create(element);
 	}
 
 	componentWillUnmount(){
-		window.removeEventListener("keydown", this.handleKeyDown, false)
-		window.removeEventListener("touchmove", this.handleTouchMove, false)
-		window.removeEventListener("touchend", this.handleTouchEnd, false)
+
 	}
 
 	handleKeyDown(e){
@@ -413,7 +407,7 @@ class TrackList extends React.Component{
 		}
 
 		return (
-			<div className={className}>
+			<div className={className} id="tracklist">
 				{ this.renderHeader() }
 				{
 					this.props.tracks.map(

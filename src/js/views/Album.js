@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import * as Model from '../models/Album';
 import Header from '../components/Header'
 import TrackList from '../components/TrackList'
 import Thumbnail from '../components/Thumbnail'

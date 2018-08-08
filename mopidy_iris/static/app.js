@@ -61859,6 +61859,10 @@ var _reactRedux = __webpack_require__(4);
 
 var _redux = __webpack_require__(2);
 
+var _Album = __webpack_require__(315);
+
+var Model = _interopRequireWildcard(_Album);
+
 var _Header = __webpack_require__(15);
 
 var _Header2 = _interopRequireDefault(_Header);
@@ -78212,6 +78216,56 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Album = exports.Album = function Album(props) {
+	_classCallCheck(this, Album);
+
+	for (var prop_name in props) {
+		if (props.hasOwnProperty(prop_name)) {
+			this[prop_name] = props[prop_name];
+		}
+	}
+};
 
 /***/ })
 /******/ ]);

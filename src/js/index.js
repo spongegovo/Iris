@@ -12,7 +12,7 @@ import store from './bootstrap.js';
 require('../scss/app.scss');
 
 import App from './App';
-import Album from './views/Album';
+import AlbumView from './views/Album';
 import Artist from './views/Artist';
 import Playlist from './views/Playlist';
 import User from './views/User';
@@ -66,7 +66,7 @@ ReactDOM.render(
 				<Route path="settings/share-authorization" component={ShareAuthorization} />
 				
 				<Route path="search(/:query)" component={Search} />
-				<Route path="album/:uri" component={Album} />
+				<Route path="album/:uri" component={AlbumView} />
 				<Route path="artist/:uri(/:sub_view)" component={Artist} />
 				<Route path="playlist/create" component={CreatePlaylist} />
 				<Route path="playlist/:uri" component={Playlist} />
